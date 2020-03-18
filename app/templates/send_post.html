@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>发文章</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.post_title.label }}<br>
+        {{ form.post_title(size=50) }}<br>
+        {% for error in form.post_title.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.post_body.label }}<br>
+        {{ form.post_body(cols=100, rows=10) }}<br>
+        {% for error in form.post_body.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

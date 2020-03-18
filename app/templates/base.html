@@ -2,6 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <script src="../static/bootstrap/js/jquery-3.2.1.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
     {% if title %}
     <title>{{ title }} - 博客</title>
     {% else %}
@@ -9,22 +12,31 @@
     {% endif %}
 </head>
 <body>
-<div>博客 :
-    <a href="{{ url_for('index') }}">首页</a>
-    {% if current_user.is_anonymous %}
-    <a href="{{ url_for('login') }}">登录</a>
-    {% else %}
-    <a href="{{ url_for('user', username=current_user.username) }}">用户中心</a>
-    <a href="{{ url_for('logout') }}">退出</a>
-    {% endif %}
-</div>
-<hr>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">MAPLE后台管理</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{{ url_for('index') }}">首页</a></li>
+                {% if current_user.is_anonymous %}
+                <li><a href="{{ url_for('login') }}">登录</a></li>
+                {% else %}
+                <li><a href="{{ url_for('user', username=current_user.username) }}">用户中心</a></li>
+                <li><a href="{{ url_for('send_post') }}">发文章</a></li>
+                <li><a href="{{ url_for('logout') }}">退出</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ur>
     {% for message in messages %}
     <li>{{ message }}</li>
-    >
     {% endfor %}
 </ur>
 {% endif %}

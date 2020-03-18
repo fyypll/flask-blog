@@ -1,6 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!--<h1>登 录</h1>-->
+<!--<form action="" method="post">-->
+<!--    <div class="form-group">-->
+<!--        <label for="uname" class="control-label">用户名</label>-->
+<!--        <input type="text" id="uname" class="form-control">-->
+<!--        <span class="help-block">字母下划线3-8位</span>-->
+<!--    </div>-->
+<!--    <div class="form-group">-->
+<!--        <label for="upwd" class="control-label">密码</label>-->
+<!--        <input type="password" id="upwd" class="form-control">-->
+<!--        <span class="help-block">密码为6-8位</span>-->
+<!--    </div>-->
+<!--    <div class="form-group">-->
+<!--        <div class="checkbox">-->
+<!--            <label><input type="checkbox">七天免密登陆</label>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="form-group">-->
+<!--        <input type="button" id="login" value="登录" class="btn btn-success">-->
+<!--        <input type="button" id="logout" value="取消" class="btn btn-danger">-->
+<!--    </div>-->
+<!--</form>-->
 <h1>登 录</h1>
 <p>还没注册? <a href="{{ url_for('register') }}">点击一下就可以注册哦!</a></p>
 <form action="" method="post">
@@ -22,6 +44,6 @@
 
     </p>
     <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-    <p>{{ form.submit() }}</p>
+    <p>{{ form.submit(class="btn btn-success") }}</p>
 </form>
 {% endblock %}

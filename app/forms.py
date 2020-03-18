@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from app.models import User
 
 
-# 登录
+# 登录表格
 class LoginForm(FlaskForm):
     # DataRequired，当你在当前表格没有输入而直接到下一个表格时会提示你输入
     username = StringField('用户名', validators=[DataRequired(message='请输入名户名')])
@@ -13,7 +13,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('登录')
 
 
-# 注册
+# 注册表格
 class RegistrationForm(FlaskForm):
     username = StringField('用户名', validators=[DataRequired()])
     email = StringField('邮箱', validators=[DataRequired(), Email()])
@@ -33,3 +33,17 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('邮箱重复了，请您重新换一个呗!')
+
+
+# 个人资料表格
+class EditProfileForm(FlaskForm):
+    username = StringField('用户名', validators=[DataRequired(message='请输入用户名!')])
+    about_me = TextAreaField('关于我', validators=[Length(min=0, max=140)])
+    submit = SubmitField('提交')
+
+
+# 发文章表格
+class SendPostForm(FlaskForm):
+    post_title = StringField('标题', validators=[DataRequired()])
+    post_body = TextAreaField('正文', validators=[Length(min=0, max=30000)])
+    submit = SubmitField('发表')

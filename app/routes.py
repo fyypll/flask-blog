@@ -1,17 +1,15 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-# 导入表单处理方法
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+# 导入各个表单处理方法(form.py文件)
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
 
 
 @app.route('/')
 @app.route('/index')
-# 这样，必须登录后才能访问首页了,会自动跳转至登录页
-# @login_required
 def index():
     user = {'username': 'duke'}
     posts = [
@@ -35,14 +33,18 @@ def login():
         return redirect(url_for('index'))
 
     form = LoginForm()
-    # user = None
+    # 对表格数据进行验证
     if form.validate_on_submit():
+        # 根据表格里的数据进行查询，如果查询到数据返回User对象，否则返回None
         user = User.query.filter_by(username=form.username.data).first()
         # print("user", user)
+        # 如果用户不存在或者密码不正确
         if user is None or not user.check_password(form.password.data):
+            # 如果用户不存在或者密码不正确则进行提示
             flash('无效的用户名或密码')
-
+            # 然后跳到登录页面
             return redirect(url_for('login'))
+        # 当用户名和密码都正确时是否记住登录状态
         login_user(user, remember=form.remember_me.data)
         # 此时的next_page记录的是跳转至登录页面是的地址
         next_page = request.args.get('next')
@@ -51,7 +53,7 @@ def login():
             next_page = url_for('index')
         # 综上，登录后要么重定向至跳转前的页面，要么跳转至首页
         return redirect(next_page)
-    # 一定要有返回体，原文作者未提及，否则用户未登陆时候会报错
+    # 一定要有返回体，否则用户未登陆时候会报错
     return render_template('login.html', title='登录', form=form)
 
 
@@ -68,6 +70,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
+    # 是否是post请求且数据是是否有效
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
@@ -80,9 +83,13 @@ def register():
 
 # 添加用户
 @app.route('/user/<username>')
+# 添加装饰器@login_required，必须登录之后才能访问该route
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
+    # result = Post.query.all()
+    # for a in result:
+    #     print('title:%s' % a.title)
     posts = [
         {'author': user, 'body': '测试Post #1号'},
         {'author': user, 'body': '测试Post #2号'}
@@ -98,10 +105,12 @@ def before_request():
         db.session.commit()
 
 
+# 编辑个人资料
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     form = EditProfileForm()
+    # 是否是post请求且数据是是否有效
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
@@ -111,5 +120,17 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='个人资料编辑',
-                           form=form)
+    return render_template('edit_profile.html', title='个人资料编辑', form=form)
+
+
+# 发表文章
+@app.route('/send_post', methods=['GET', 'POST'])
+@login_required
+def send_post():
+    form = SendPostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.post_title.data, body=form.post_body.data)
+        db.session.add(post)
+        db.session.commit()
+        flash('文章发布成功!')
+    return render_template('send_post.html', title='发文章', form=form)
