@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8a1442f48834ecc1b577abc143adc49fee252d3d95d5bf7e99ed372a5463121b"
+            "sha256": "948c115eeedd0a5b1d4dd17d310ccb7de058e9443d5d0f31b306b4e14eb15df6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -36,6 +36,14 @@
             ],
             "index": "tsinghua",
             "version": "==1.1.1"
+        },
+        "flask-login": {
+            "hashes": [
+                "sha256:6d33aef15b5bcead780acc339464aae8a6e28f13c90d8b1cf9de8b549d1c0b4b",
+                "sha256:7451b5001e17837ba58945aead261ba425fdf7b4f0448777e597ddab39f4fba0"
+            ],
+            "index": "tsinghua",
+            "version": "==0.5.0"
         },
         "flask-migrate": {
             "hashes": [
