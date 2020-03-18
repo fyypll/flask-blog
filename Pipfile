@@ -1,0 +1,17 @@
+[[source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+verify_ssl = false
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-wtf = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+pymysql = "*"
+flask-login = "*"
+
+[requires]
+python_version = "3.7"
