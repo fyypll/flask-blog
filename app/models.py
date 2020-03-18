@@ -22,9 +22,11 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<用户名:{}>'.format(self.username)
 
+    # 对用户密码进行加密
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
+    # 检测密码是否正确
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -50,5 +52,5 @@ class Post(db.Model):
 # 用户加载
 @login.user_loader
 def load_user(id):
-    # 从session中读取到id然后将其转换为int类型
+    # 读取session中的id然后将其转换为int类型
     return User.query.get(int(id))

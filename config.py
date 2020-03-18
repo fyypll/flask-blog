@@ -1,8 +1,3 @@
-import os
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-
 class Config(object):
     # 设置密匙，当然是越复杂越好啦
     SECRET_KEY = 'my%name%is%maple,this%is%my%blog'

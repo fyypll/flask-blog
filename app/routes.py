@@ -60,6 +60,7 @@ def login():
 # 注销登录
 @app.route('/logout')
 def logout():
+    # 将用户信息保存在session中
     logout_user()
     return redirect(url_for('index'))
 
@@ -81,7 +82,7 @@ def register():
     return render_template('register.html', title='注册', form=form)
 
 
-# 添加用户
+# 用户中心
 @app.route('/user/<username>')
 # 添加装饰器@login_required，必须登录之后才能访问该route
 @login_required
@@ -94,14 +95,17 @@ def user(username):
         {'author': user, 'body': '测试Post #1号'},
         {'author': user, 'body': '测试Post #2号'}
     ]
-
     return render_template('user.html', user=user, posts=posts)
 
 
+# 中户中心显示最后登录时间
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
+        # 系统世界标准时间
+        # current_user.last_seen = datetime.utcnow()
+        # 系统本地时间
+        current_user.last_seen = datetime.now()
         db.session.commit()
 
 
@@ -115,7 +119,7 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('你的提交已变更.')
+        flash('用户名或签名变更成功')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -128,8 +132,17 @@ def edit_profile():
 @login_required
 def send_post():
     form = SendPostForm()
+
+    # user = User.query.filter_by(username=username).first_or_404()
+    # 如果是post请求且数据格式正确
     if form.validate_on_submit():
-        post = Post(title=form.post_title.data, body=form.post_body.data)
+        # 获取当前已登录用户id
+        userId = current_user.id
+        # 获取提交文章时间
+        sendTime = datetime.now().strftime("%Y-%m-%d %H:%M")
+        # 将数据放到post
+        post = Post(title=form.post_title.data, body=form.post_body.data, user_id=userId, post_time=sendTime)
+        # 将post提交到数据库
         db.session.add(post)
         db.session.commit()
         flash('文章发布成功!')
