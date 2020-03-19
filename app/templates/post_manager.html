@@ -1,8 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for post in posts %}
-{{ post.id }} : {{ post.title }} -- <a href="{{ url_for('edit_post',post_id=post.id) }}">编辑</a>--<a
-        href="{{ url_for('dele_post',post_id=post.id) }}">删除</a><br>
-{% endfor %}
+<div class="table-responsive">
+    <table class="table table-condensed table-bordered">
+        <caption>文章管理</caption>
+        <tr>
+            <th>文章名</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
+            <td><a href="{{ url_for('edit_post',post_id=post.id) }}">
+                <button class="btn btn-success" type="button">
+                    <span class="glyphicon glyphicon glyphicon glyphicon-pencil"></span>
+                    编辑
+                </button>
+            </a></td>
+            <td><a href="{{ url_for('dele_post',post_id=post.id) }}">
+                <button class="btn btn-danger" type="button">
+                    <span class="glyphicon glyphicon glyphicon-trash"></span>
+                    删除
+                </button>
+            </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}
