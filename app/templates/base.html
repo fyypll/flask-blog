@@ -24,6 +24,7 @@
                 <li><a href="{{ url_for('login') }}">登录</a></li>
                 {% else %}
                 <li><a href="{{ url_for('user', username=current_user.username) }}">用户中心</a></li>
+                <li><a href="{{ url_for('post_manager') }}">文章管理</a></li>
                 <li><a href="{{ url_for('send_post') }}">发文章</a></li>
                 <li><a href="{{ url_for('logout') }}">退出</a></li>
                 {% endif %}

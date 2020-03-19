@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
     # 从而获取到所有相关的对象;dynamic则不一样，在访问属性的时候，并没有在内存中加载数据，而是返回一个query对象, 需要执行相应方法才可以获取对象，比如.all()
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return '<用户名:{}>'.format(self.username)
@@ -47,6 +47,9 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+    # def get_post(self):
+    #     return 'post_id:{},post_body:{}'.format(self.id, self.body)
 
 
 # 用户加载

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm
@@ -132,8 +132,6 @@ def edit_profile():
 @login_required
 def send_post():
     form = SendPostForm()
-
-    # user = User.query.filter_by(username=username).first_or_404()
     # 如果是post请求且数据格式正确
     if form.validate_on_submit():
         # 获取当前已登录用户id
@@ -147,3 +145,28 @@ def send_post():
         db.session.commit()
         flash('文章发布成功!')
     return render_template('send_post.html', title='发文章', form=form)
+
+
+# 文章管理
+@app.route('/post_manager')
+@login_required
+def post_manager():
+    # 获取当前已登录用户id
+    userId = current_user.id
+    # 查询属于当前已登录用户的所有文章
+    posts = Post.query.filter_by(user_id=userId).all()
+    return render_template('post_manager.html', posts=posts)
+
+
+# 编辑文章
+@app.route('/edit_post')
+@login_required
+def edit_post():
+    pass
+
+
+# 删除文章
+@app.route('/dele_post')
+@login_required
+def dele_post():
+    pass
