@@ -48,9 +48,6 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-    # def get_post(self):
-    #     return 'post_id:{},post_body:{}'.format(self.id, self.body)
-
 
 # 用户加载
 @login.user_loader
