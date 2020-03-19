@@ -45,5 +45,12 @@ class EditProfileForm(FlaskForm):
 # 发文章表格
 class SendPostForm(FlaskForm):
     post_title = StringField('标题', validators=[DataRequired()])
-    post_body = TextAreaField('正文', validators=[Length(min=0, max=30000)])
+    post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
+    submit = SubmitField('发表')
+
+
+# 编辑文章表格
+class EditPostForm(FlaskForm):
+    post_title = StringField('标题', validators=[DataRequired()])
+    post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
     submit = SubmitField('发表')

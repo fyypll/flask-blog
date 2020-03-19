@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from werkzeug.urls import url_parse
@@ -159,10 +159,23 @@ def post_manager():
 
 
 # 编辑文章
-@app.route('/edit_post')
+@app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
 @login_required
-def edit_post():
-    pass
+def edit_post(post_id):
+    form = EditPostForm()
+    post_info = Post.query.filter_by(id=post_id).first_or_404()
+    # 是否是post请求且数据是是否有效
+    if form.validate_on_submit():
+        post_info.title = form.post_title.data
+        post_info.body = form.post_body.data
+        db.session.commit()
+        flash('文章修改成功')
+        return redirect(url_for('post_manager'))
+    elif request.method == 'GET':
+        # 在表单中显示当前要编辑文章的标题与内容
+        form.post_title.data = post_info.title
+        form.post_body.data = post_info.body
+    return render_template('edit_post.html', form=form)
 
 
 # 删除文章
