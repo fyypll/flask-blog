@@ -2,6 +2,7 @@
 
 {% block content %}
 {% for post in posts %}
-{{ post.id }} : {{ post.title }} -- <a href="{{ url_for('edit_post',post_id=post.id) }}">编辑</a>--<a href="{{ url_for('dele_post') }}">删除</a><br>
+{{ post.id }} : {{ post.title }} -- <a href="{{ url_for('edit_post',post_id=post.id) }}">编辑</a>--<a
+        href="{{ url_for('dele_post',post_id=post.id) }}">删除</a><br>
 {% endfor %}
 {% endblock %}

@@ -179,7 +179,12 @@ def edit_post(post_id):
 
 
 # 删除文章
-@app.route('/dele_post')
+@app.route('/dele_post/<post_id>', methods=['GET'])
 @login_required
-def dele_post():
-    pass
+def dele_post(post_id):
+    # 根据文章id查询到文章数据
+    post_info = Post.query.filter_by(id=post_id).first_or_404()
+    db.session.delete(post_info)
+    db.session.commit()
+    # 删除后返回文章管理页面
+    return redirect(url_for('post_manager'))
