@@ -35,12 +35,12 @@ def login():
             return redirect(url_for('login'))
         # 当用户名和密码都正确时是否记住登录状态
         login_user(user, remember=form.remember_me.data)
-        # 此时的next_page记录的是跳转至登录页面是的地址
+        # 此时的next_page记录的是跳转至登录页面时的地址
         next_page = request.args.get('next')
         # 如果next_page记录的地址不存在那么就返回首页
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-        # 综上，登录后要么重定向至跳转前的页面，要么跳转至首页
+        # 登录后要么重定向至跳转前的页面，要么跳转至首页
         return redirect(next_page)
     # 一定要有返回体，否则用户未登陆时候会报错
     return render_template('login.html', title='登录', form=form)
@@ -54,6 +54,7 @@ def logout():
     return redirect(url_for('index'))
 
 
+# 用户注册
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     # 判断当前用户是否验证，如果通过的话返回首页

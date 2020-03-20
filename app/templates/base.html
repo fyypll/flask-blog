@@ -37,6 +37,11 @@
     </div>
 </div>
 
+<div class="container" style="margin-top: 50px">
+{% block content %} {% endblock %}
+</div>
+
+<!--显示闪现的消息-->
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ur>
@@ -46,23 +51,5 @@
 </ur>
 {% endif %}
 {% endwith %}
-
-<div class="container" style="margin-top: 50px">
-{% block content %} {% endblock %}
-</div>
-
-<script>
-    $(document).ready(function () {
-        // // 导航栏点击激活效果切换失效，原因未知
-        // $(function () {
-        //     $(".navbar-nav li").click(function () {
-        //         // 添加当前元素的样式
-        //         $(this).addClass('active')
-        //         // 删除其他兄弟元素的样式
-        //         $(this).siblings('li').removeClass('active')
-        //     })
-        // })
-    })
-</script>
 </body>
 </html>
