@@ -8,6 +8,7 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 
 
+# 首页
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -15,14 +16,14 @@ def index():
     return render_template('index.html', title='我的', user=user)
 
 
+# 登录
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # 判断当前用户是否验证，如果通过的话返回首页
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
     form = LoginForm()
-    # 对表格数据进行验证
+    # 是否是post请求且数据格式正确
     if form.validate_on_submit():
         # 根据表格里的数据进行查询，如果查询到数据返回User对象，否则返回None
         user = User.query.filter_by(username=form.username.data).first()
@@ -42,14 +43,13 @@ def login():
             next_page = url_for('index')
         # 登录后要么重定向至跳转前的页面，要么跳转至首页
         return redirect(next_page)
-    # 一定要有返回体，否则用户未登陆时候会报错
+    # 一定要有返回体，否则用户未登录时候会报错
     return render_template('login.html', title='登录', form=form)
 
 
 # 注销登录
 @app.route('/logout')
 def logout():
-    # 将用户信息保存在session中
     logout_user()
     return redirect(url_for('index'))
 
@@ -176,5 +176,6 @@ def dele_post(post_id):
     post_info = Post.query.filter_by(id=post_id).first_or_404()
     db.session.delete(post_info)
     db.session.commit()
+    flash('文章已成功删除')
     # 删除后返回文章管理页面
     return redirect(url_for('post_manager'))

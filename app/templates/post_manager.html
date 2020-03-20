@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<!--显示闪现的消息-->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ur>
+    {% for message in messages %}
+    <div class="alert alert-success" style="text-align: center">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ur>
+{% endif %}
+{% endwith %}
+
 <div class="table-responsive">
     <table class="table table-condensed table-bordered">
         <caption>文章管理</caption>

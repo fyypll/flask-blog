@@ -1,10 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<!--显示闪现的消息-->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ur>
+    {% for message in messages %}
+    <div class="alert alert-success" style="text-align: center">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ur>
+{% endif %}
+{% endwith %}
+
 <h1>个人资料编辑</h1>
 <form action="" method="post">
     <div class="form-group">
-        <!-- 显示提交是否变更的提示 -->
         {{ form.hidden_tag() }}
         <label>{{ form.username.label }}</label>
         {{ form.username(size=32, class="form-control") }}
@@ -21,4 +35,5 @@
     </div>
     <p>{{ form.submit(class="btn btn-primary") }}</p>
 </form>
+
 {% endblock %}

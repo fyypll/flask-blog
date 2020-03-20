@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!--显示闪现的消息-->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ur>
+    {% for message in messages %}
+    <div class="alert alert-success" style="text-align: center">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ur>
+{% endif %}
+{% endwith %}
+
 <h1>登 录</h1>
 <p>还没注册? <a href="{{ url_for('register') }}">快来注册一个账号吧！</a></p>
 <form action="" method="post">
@@ -25,4 +39,5 @@
     </div>
     {{ form.submit(class="btn btn-success") }}
 </form>
+
 {% endblock %}

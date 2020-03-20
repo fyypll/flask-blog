@@ -38,18 +38,7 @@
 </div>
 
 <div class="container" style="margin-top: 50px">
-{% block content %} {% endblock %}
+    {% block content %} {% endblock %}
 </div>
-
-<!--显示闪现的消息-->
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ur>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ur>
-{% endif %}
-{% endwith %}
 </body>
 </html>

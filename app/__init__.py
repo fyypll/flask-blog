@@ -22,6 +22,7 @@ login = LoginManager(app)
 # 加在login = LoginManager(app)后面，位置不能错
 # 不让未登录的用户进入除了login之外的界面
 login.login_view = 'login'
+login.login_message = u"这个页面需要你登录才能访问哦"
 
 # 这里放后面，位置也不能错
 from app import routes, models
