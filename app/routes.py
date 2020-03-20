@@ -31,7 +31,7 @@ def login():
         # 如果用户不存在或者密码不正确
         if user is None or not user.check_password(form.password.data):
             # 如果用户不存在或者密码不正确则进行提示
-            flash('无效的用户名或密码')
+            flash('无效的用户名或密码!')
             # 然后跳到登录页面
             return redirect(url_for('login'))
         # 当用户名和密码都正确时是否记住登录状态
@@ -67,7 +67,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('恭喜你成为我们网站的新用户!')
+        flash('恭喜您成为我们网站的新用户!')
         return redirect(url_for('login'))
     return render_template('register.html', title='注册', form=form)
 

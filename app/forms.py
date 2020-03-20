@@ -1,3 +1,5 @@
+import re
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
@@ -12,37 +14,48 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('记住我')
     submit = SubmitField('登录')
 
-    # 校验用户名是否注册
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is None:
-            raise ValidationError('该用户尚未注册！')
+    # # 校验用户名是否注册
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     if user is None:
+    #         raise ValidationError('该用户尚未注册！')
 
 
 # 注册表格
 class RegistrationForm(FlaskForm):
     username = StringField('用户名', validators=[DataRequired()])
-    email = StringField('邮箱', validators=[DataRequired(), Email()])
+    email = StringField('邮箱', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
     password = PasswordField('密码', validators=[DataRequired()])
-    password2 = PasswordField('重复密码', validators=[DataRequired(), EqualTo('password')])
+    password2 = PasswordField('重复密码', validators=[DataRequired(), EqualTo('password', '两次输入的密码不一致!')])
     submit = SubmitField('注册')
 
-    # 校验用户名是否重复
+    # 校验用户名
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
+        # 如果用户名在数据库已存在
         if user is not None:
-            raise ValidationError('用户名重复了，换一个吧!')
+            raise ValidationError('用户名已存在，再想一个?')
+        # 如果用户名是纯数字
+        if username.data.isdigit():
+            raise ValidationError('用户名不能是纯数字哦')
 
-    # 校验邮箱是否重复
+    # 校验邮箱
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
+        # 如果邮箱在数据库中已存在
         if user is not None:
-            raise ValidationError('邮箱重复了，换一个吧!')
+            raise ValidationError('邮箱已存在，换一个?')
+        # 这里注释了是因为其实上面的表单已经实现了验证了，把默认的错误提示改成自己的就行了，这里就不需要了
+        # # 如果邮箱名长度小于7且格式通过正则验证结果为None
+        # if len(email.data) < 7 or re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email.data) == None:
+        #     raise ValidationError('邮箱格式不对哦，检查一下吧!')
 
-    # 校验两次输入的密码是否一致
-    def validate_pwd(self, password, password2):
-        if password != password2:
-            raise ValidationError('两次输入的密码不一致!')
+    # 验证密码长度
+    def validate_password(self, password):
+        if len(password.data) < 6:
+            raise ValidationError('密码长度不能少于6个字符哦')
+        if len(password.data) > 15:
+            raise ValidationError('密码长度不能大于15个字符哦')
 
 
 # 个人资料表格
