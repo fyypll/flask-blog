@@ -46,7 +46,14 @@ class Post(db.Model):
     post_time = db.Column(db.String(20))
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<body:{}>'.format(self.body)
+
+    # 定义一个to_json的方法，使用dict方法来返回类中的属性字典
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
 
 
 # 用户加载

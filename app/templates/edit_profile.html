@@ -18,19 +18,20 @@
 
 <h1>个人资料编辑</h1>
 <form action="" method="post">
+    {{ form.hidden_tag() }}
     <div class="form-group">
-        {{ form.hidden_tag() }}
         <label>{{ form.username.label }}</label>
         {{ form.username(size=32, class="form-control") }}
         {% for error in form.username.errors %}
-        <span style="color: red;">[{{ error }}]</span>
+        <span class="text-danger">{{ error }}</span>
         {% endfor %}
     </div>
+    <!--关于我-->
     <div class="form-group">
         <label>{{ form.about_me.label }}</label>
         {{ form.about_me(cols=50, rows=4, class="form-control") }}
         {% for error in form.about_me.errors %}
-        <span style="color: red;">[{{ error }}]</span>
+        <span class="text-danger">{{ error }}</span>
         {% endfor %}
     </div>
     <p>{{ form.submit(class="btn btn-primary") }}</p>

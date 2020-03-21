@@ -37,7 +37,12 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('用户名已存在，再想一个?')
         # 如果用户名是纯数字
         if username.data.isdigit():
-            raise ValidationError('用户名不能是纯数字哦')
+            raise ValidationError('用户名不能是纯数字哦!')
+        # 用户名长度判断
+        if len(username.data) < 5:
+            raise ValidationError('用户名长度不能小于4位哦!')
+        if len(username.data) > 15:
+            raise ValidationError('用户名长度不能大于15位哦!')
 
     # 校验邮箱
     def validate_email(self, email):
@@ -53,16 +58,27 @@ class RegistrationForm(FlaskForm):
     # 验证密码长度
     def validate_password(self, password):
         if len(password.data) < 6:
-            raise ValidationError('密码长度不能少于6个字符哦')
+            raise ValidationError('密码长度不能少于6个字符哦!')
         if len(password.data) > 15:
-            raise ValidationError('密码长度不能大于15个字符哦')
+            raise ValidationError('密码长度不能大于15个字符哦!')
 
 
 # 个人资料表格
 class EditProfileForm(FlaskForm):
-    username = StringField('用户名', validators=[DataRequired(message='请输入用户名!')])
+    username = StringField('用户名', validators=[DataRequired(message='用户名不可为空哦')])
     about_me = TextAreaField('关于我', validators=[Length(min=0, max=140)])
     submit = SubmitField('提交')
+
+    # 校验用户名
+    def validate_username(self, username):
+        # 如果用户名是纯数字
+        if username.data.isdigit():
+            raise ValidationError('用户名不能是纯数字哦!')
+        # 用户名长度判断
+        if len(username.data) < 5:
+            raise ValidationError('用户名长度不能小于4位哦!')
+        if len(username.data) > 15:
+            raise ValidationError('用户名长度不能大于15位哦!')
 
 
 # 发文章表格

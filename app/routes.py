@@ -31,7 +31,7 @@ def login():
         # 如果用户不存在或者密码不正确
         if user is None or not user.check_password(form.password.data):
             # 如果用户不存在或者密码不正确则进行提示
-            flash('无效的用户名或密码!')
+            flash('用户名或密码无效,再检查一下?')
             # 然后跳到登录页面
             return redirect(url_for('login'))
         # 当用户名和密码都正确时是否记住登录状态
@@ -67,7 +67,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('恭喜您成为我们网站的新用户!')
+        flash('恭喜您成为我们网站的新用户啦!')
         return redirect(url_for('login'))
     return render_template('register.html', title='注册', form=form)
 
@@ -81,11 +81,7 @@ def user(username):
     # result = Post.query.all()
     # for a in result:
     #     print('title:%s' % a.title)
-    posts = [
-        {'author': user, 'body': '测试Post #1号'},
-        {'author': user, 'body': '测试Post #2号'}
-    ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', title='用户中心', user=user)
 
 
 # 中户中心显示最后登录时间
@@ -109,7 +105,7 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('用户名或签名变更成功')
+        flash('个人资料变更成功!')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -133,7 +129,7 @@ def send_post():
         # 将post提交到数据库
         db.session.add(post)
         db.session.commit()
-        flash('文章发布成功!')
+        flash('文章已发布，快去看看吧!')
     return render_template('send_post.html', title='发文章', form=form)
 
 
@@ -145,7 +141,7 @@ def post_manager():
     userId = current_user.id
     # 查询属于当前已登录用户的所有文章
     posts = Post.query.filter_by(user_id=userId).all()
-    return render_template('post_manager.html', posts=posts)
+    return render_template('post_manager.html', title='文章管理', posts=posts)
 
 
 # 编辑文章
@@ -159,13 +155,13 @@ def edit_post(post_id):
         post_info.title = form.post_title.data
         post_info.body = form.post_body.data
         db.session.commit()
-        flash('文章修改成功')
+        flash('文章更新成功!')
         return redirect(url_for('post_manager'))
     elif request.method == 'GET':
         # 在表单中显示当前要编辑文章的标题与内容
         form.post_title.data = post_info.title
         form.post_body.data = post_info.body
-    return render_template('edit_post.html', form=form)
+    return render_template('edit_post.html', title='文章编辑', form=form)
 
 
 # 删除文章
@@ -176,6 +172,26 @@ def dele_post(post_id):
     post_info = Post.query.filter_by(id=post_id).first_or_404()
     db.session.delete(post_info)
     db.session.commit()
-    flash('文章已成功删除')
+    flash('文章已成功删除!')
     # 删除后返回文章管理页面
     return redirect(url_for('post_manager'))
+
+
+# 文章相关api
+# 获取所有用户文章数据
+@app.route('/api/post', methods=['GET'])
+def post():
+    data = Post.query.all()
+    # 检测取出来的数据是不是list类型，结果是true
+    # a = isinstance(data, list)
+    # print(data.to_dict())
+    # print(*data, sep='\n')
+    # for a in data:
+    #     print(a)
+    # 将数据按json格式输出
+    posts = []
+    for postdata in data:
+        # 使用类中的to_json函数进行处理
+        posts.append(postdata.to_json())
+    # print(jsonify(posts))
+    return jsonify(posts)
