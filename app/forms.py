@@ -39,7 +39,7 @@ class RegistrationForm(FlaskForm):
         if username.data.isdigit():
             raise ValidationError('用户名不能是纯数字哦!')
         # 用户名长度判断
-        if len(username.data) < 5:
+        if len(username.data) < 4:
             raise ValidationError('用户名长度不能小于4位哦!')
         if len(username.data) > 15:
             raise ValidationError('用户名长度不能大于15位哦!')
@@ -71,11 +71,15 @@ class EditProfileForm(FlaskForm):
 
     # 校验用户名
     def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        # 如果用户名在数据库已存在
+        if user is not None:
+            raise ValidationError('用户名已存在，再想一个?')
         # 如果用户名是纯数字
         if username.data.isdigit():
             raise ValidationError('用户名不能是纯数字哦!')
         # 用户名长度判断
-        if len(username.data) < 5:
+        if len(username.data) < 4:
             raise ValidationError('用户名长度不能小于4位哦!')
         if len(username.data) > 15:
             raise ValidationError('用户名长度不能大于15位哦!')

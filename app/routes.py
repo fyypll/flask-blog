@@ -145,22 +145,49 @@ def post_manager():
 
 
 # 编辑文章
-@app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+# @app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_post(post_id):
+#     form = EditPostForm()
+#     post_info = Post.query.filter_by(id=post_id).first_or_404()
+#     # 是否是post请求且数据是是否有效
+#     if form.validate_on_submit():
+#         post_info.title = form.post_title.data
+#         post_info.body = form.post_body.data
+#         db.session.commit()
+#         flash('文章更新成功!')
+#         return redirect(url_for('post_manager'))
+#     elif request.method == 'GET':
+#         # 在表单中显示当前要编辑文章的标题与内容
+#         form.post_title.data = post_info.title
+#         form.post_body.data = post_info.body
+#     return render_template('edit_post.html', title='文章编辑', form=form)
+
+@app.route('/edit_post', methods=['GET', 'POST'])
 @login_required
-def edit_post(post_id):
+def edit_post():
     form = EditPostForm()
+    # 获取编辑按钮传过来的文章id
+    post_id = request.args.get('post_id')
+    # 根据文章id查询文章数据
     post_info = Post.query.filter_by(id=post_id).first_or_404()
-    # 是否是post请求且数据是是否有效
-    if form.validate_on_submit():
-        post_info.title = form.post_title.data
-        post_info.body = form.post_body.data
-        db.session.commit()
-        flash('文章更新成功!')
+    # 如果当前登录用户id是文章作者id，则允许对文章进行修改
+    if current_user.id == post_info.user_id:
+        # 是否是post请求且数据是是否有效
+        if form.validate_on_submit():
+            post_info.title = form.post_title.data
+            post_info.body = form.post_body.data
+            db.session.commit()
+            flash('文章更新成功!')
+            return redirect(url_for('post_manager'))
+        elif request.method == 'GET':
+            # 在表单中显示当前要编辑文章的标题与内容
+            form.post_title.data = post_info.title
+            form.post_body.data = post_info.body
+    # 如果文章不属于登录用户则返回管理界面
+    else:
+        flash('这篇文章不是你写的哦!')
         return redirect(url_for('post_manager'))
-    elif request.method == 'GET':
-        # 在表单中显示当前要编辑文章的标题与内容
-        form.post_title.data = post_info.title
-        form.post_body.data = post_info.body
     return render_template('edit_post.html', title='文章编辑', form=form)
 
 
