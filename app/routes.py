@@ -8,6 +8,7 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 from flask_paginate import Pagination, get_page_parameter
 
+
 # 首页
 @app.route('/')
 @app.route('/index')
@@ -141,7 +142,26 @@ def post_manager():
     userId = current_user.id
     # 查询属于当前已登录用户的所有文章
     posts = Post.query.filter_by(user_id=userId).all()
-    return render_template('post_manager.html', title='文章管理', posts=posts)
+    # 每页显示多少文章
+    per_page = 12
+    # 总的有多少篇文章，使用len函数进行统计
+    total = len(posts)
+    # 获取页码，默认为第一页(刚开始取不到页码数据，默认为1)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    # 每一页开始的位置
+    start = (page - 1) * per_page
+    # 每一页结束的位置
+    end = start + per_page
+    # 使用Pagination函数进行分页，使用bootstrap3模板，
+    pagination = Pagination(bs_version=3, page=page, total=total)
+    # 对文章进行切片(每次12段)
+    articles = posts[slice(start, end)]
+    # print(articles)
+    context = {
+        'pagination': pagination,
+        'articles': articles
+    }
+    return render_template('post_manager.html', title='文章管理', **context)
 
 
 # 编辑文章

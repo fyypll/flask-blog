@@ -25,7 +25,7 @@
             <th>删除</th>
         </tr>
         <!-- 取出文章数据 -->
-        {% for post in posts %}
+        {% for post in articles %}
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
             <!-- 将文章id通过get方式传过去 -->
@@ -45,6 +45,6 @@
         {% endfor %}
     </table>
     <!--分页-->
-
+    {{pagination.links}}
 </div>
 {% endblock %}
