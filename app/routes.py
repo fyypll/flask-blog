@@ -6,7 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
-
+from flask_paginate import Pagination, get_page_parameter
 
 # 首页
 @app.route('/')
@@ -170,7 +170,7 @@ def edit_post():
     else:
         flash('这篇文章不是你写的哦!')
         return redirect(url_for('post_manager'))
-    return render_template('edit_post.html', title='文章编辑', form=form)
+    return render_template('edit_post.html', title='文章编辑', form=form, )
 
 
 # 删除文章

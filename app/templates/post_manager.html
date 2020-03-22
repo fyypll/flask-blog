@@ -24,6 +24,7 @@
             <th>编辑</th>
             <th>删除</th>
         </tr>
+        <!-- 取出文章数据 -->
         {% for post in posts %}
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
@@ -43,5 +44,7 @@
         </tr>
         {% endfor %}
     </table>
+    <!--分页-->
+
 </div>
 {% endblock %}

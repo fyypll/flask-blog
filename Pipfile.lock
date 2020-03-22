@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "948c115eeedd0a5b1d4dd17d310ccb7de058e9443d5d0f31b306b4e14eb15df6"
+            "sha256": "663755b002d3c19f775143f63ba0338ab5dc878a814477a0f8f3607d2f311972"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -9,8 +9,8 @@
         },
         "sources": [
             {
-                "name": "tsinghua",
-                "url": "https://pypi.tuna.tsinghua.edu.cn/simple/",
+                "name": "aliyun",
+                "url": "http://mirrors.aliyun.com/pypi/simple",
                 "verify_ssl": false
             }
         ]
@@ -20,6 +20,7 @@
             "hashes": [
                 "sha256:791a5686953c4b366d3228c5377196db2f534475bb38d26f70eb69668efd9028"
             ],
+            "index": "aliyun",
             "version": "==1.4.1"
         },
         "click": {
@@ -27,6 +28,7 @@
                 "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
                 "sha256:e345d143d80bf5ee7534056164e5e112ea5e22716bbb1ce727941f4c8b471b9a"
             ],
+            "index": "aliyun",
             "version": "==7.1.1"
         },
         "flask": {
@@ -34,7 +36,7 @@
                 "sha256:13f9f196f330c7c2c5d7a5cf91af894110ca0215ac051b5844701f2bfd934d52",
                 "sha256:45eb5a6fd193d6cf7e0cf5d8a5b31f83d5faae0293695626f539a823e93b13f6"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==1.1.1"
         },
         "flask-login": {
@@ -42,7 +44,7 @@
                 "sha256:6d33aef15b5bcead780acc339464aae8a6e28f13c90d8b1cf9de8b549d1c0b4b",
                 "sha256:7451b5001e17837ba58945aead261ba425fdf7b4f0448777e597ddab39f4fba0"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==0.5.0"
         },
         "flask-migrate": {
@@ -50,15 +52,22 @@
                 "sha256:4dc4a5cce8cbbb06b8dc963fd86cf8136bd7d875aabe2d840302ea739b243732",
                 "sha256:a69d508c2e09d289f6e55a417b3b8c7bfe70e640f53d2d9deb0d056a384f37ee"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==2.5.3"
+        },
+        "flask-paginate": {
+            "hashes": [
+                "sha256:d2aa07b4ef27f56f973482aaa06a0d93dc769a3e4d3e9c382a305ab72ac38ad9"
+            ],
+            "index": "aliyun",
+            "version": "==0.5.5"
         },
         "flask-sqlalchemy": {
             "hashes": [
                 "sha256:0078d8663330dc05a74bc72b3b6ddc441b9a744e2f56fe60af1a5bfc81334327",
                 "sha256:6974785d913666587949f7c2946f7001e4fa2cb2d19f4e69ead02e4b8f50b33d"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==2.4.1"
         },
         "flask-wtf": {
@@ -66,7 +75,7 @@
                 "sha256:57b3faf6fe5d6168bda0c36b0df1d05770f8e205e18332d0376ddb954d17aef2",
                 "sha256:d417e3a0008b5ba583da1763e4db0f55a1269d9dd91dcc3eb3c026d3c5dbd720"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==0.14.3"
         },
         "itsdangerous": {
@@ -74,6 +83,7 @@
                 "sha256:321b033d07f2a4136d3ec762eac9f16a10ccd60f53c0c91af90217ace7ba1f19",
                 "sha256:b12271b2047cb23eeb98c8b5622e2e5c5e9abd9784a153e9d8ef9cb4dd09d749"
             ],
+            "index": "aliyun",
             "version": "==1.1.0"
         },
         "jinja2": {
@@ -81,6 +91,7 @@
                 "sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250",
                 "sha256:b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49"
             ],
+            "index": "aliyun",
             "version": "==2.11.1"
         },
         "mako": {
@@ -88,6 +99,7 @@
                 "sha256:3139c5d64aa5d175dbafb95027057128b5fbd05a40c53999f3905ceb53366d9d",
                 "sha256:8e8b53c71c7e59f3de716b6832c4e401d903af574f6962edbbbf6ecc2a5fe6c9"
             ],
+            "index": "aliyun",
             "version": "==1.1.2"
         },
         "markupsafe": {
@@ -126,6 +138,7 @@
                 "sha256:e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7",
                 "sha256:e8313f01ba26fbbe36c7be1966a7b7424942f670f38e666995b88d012765b9be"
             ],
+            "index": "aliyun",
             "version": "==1.1.1"
         },
         "pymysql": {
@@ -133,7 +146,7 @@
                 "sha256:3943fbbbc1e902f41daf7f9165519f140c4451c179380677e6a848587042561a",
                 "sha256:d8c059dcd81dedb85a9f034d5e22dcb4442c0b201908bede99e306d65ea7c8e7"
             ],
-            "index": "tsinghua",
+            "index": "aliyun",
             "version": "==0.9.3"
         },
         "python-dateutil": {
@@ -141,6 +154,7 @@
                 "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c",
                 "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"
             ],
+            "index": "aliyun",
             "version": "==2.8.1"
         },
         "python-editor": {
@@ -149,6 +163,7 @@
                 "sha256:51fda6bcc5ddbbb7063b2af7509e43bd84bfc32a4ff71349ec7847713882327b",
                 "sha256:5f98b069316ea1c2ed3f67e7f5df6c0d8f10b689964a4a811ff64f0106819ec8"
             ],
+            "index": "aliyun",
             "version": "==1.0.4"
         },
         "six": {
@@ -156,12 +171,14 @@
                 "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a",
                 "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
             ],
+            "index": "aliyun",
             "version": "==1.14.0"
         },
         "sqlalchemy": {
             "hashes": [
                 "sha256:c4cca4aed606297afbe90d4306b49ad3a4cd36feb3f87e4bfd655c57fd9ef445"
             ],
+            "index": "aliyun",
             "version": "==1.3.15"
         },
         "werkzeug": {
@@ -169,6 +186,7 @@
                 "sha256:169ba8a33788476292d04186ab33b01d6add475033dfc07215e6d219cc077096",
                 "sha256:6dc65cf9091cf750012f56f2cad759fa9e879f511b5ff8685e456b4e3bf90d16"
             ],
+            "index": "aliyun",
             "version": "==1.0.0"
         },
         "wtforms": {
@@ -176,6 +194,7 @@
                 "sha256:0cdbac3e7f6878086c334aa25dc5a33869a3954e9d1e015130d65a69309b3b61",
                 "sha256:e3ee092c827582c50877cdbd49e9ce6d2c5c1f6561f849b3b068c1b8029626f1"
             ],
+            "index": "aliyun",
             "version": "==2.2.1"
         }
     },
