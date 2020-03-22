@@ -145,24 +145,6 @@ def post_manager():
 
 
 # 编辑文章
-# @app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_post(post_id):
-#     form = EditPostForm()
-#     post_info = Post.query.filter_by(id=post_id).first_or_404()
-#     # 是否是post请求且数据是是否有效
-#     if form.validate_on_submit():
-#         post_info.title = form.post_title.data
-#         post_info.body = form.post_body.data
-#         db.session.commit()
-#         flash('文章更新成功!')
-#         return redirect(url_for('post_manager'))
-#     elif request.method == 'GET':
-#         # 在表单中显示当前要编辑文章的标题与内容
-#         form.post_title.data = post_info.title
-#         form.post_body.data = post_info.body
-#     return render_template('edit_post.html', title='文章编辑', form=form)
-
 @app.route('/edit_post', methods=['GET', 'POST'])
 @login_required
 def edit_post():
