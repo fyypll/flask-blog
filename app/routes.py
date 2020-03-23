@@ -240,10 +240,13 @@ def post_info():
     # 对文章进行切片(每12篇切一次)
     articles = posts[slice(start, end)]
     # 定义数组posts用于接收切片且json化后的数据
+    a = {}
     posts = []
     # 将切片后的数据进行json化处理
     for postdata in articles:
         # 使用类中的to_json函数进行处理
         posts.append(postdata.to_json())
     # print(posts)
+    # 文章总页数
+    # pagination.total_pages
     return jsonify(posts)
