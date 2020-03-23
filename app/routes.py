@@ -154,7 +154,7 @@ def post_manager():
     end = start + per_page
     # 使用Pagination函数进行分页，使用bootstrap3模板，
     pagination = Pagination(bs_version=3, page=page, total=total)
-    # 对文章进行切片(每次12段)
+    # 对文章进行切片(每12篇切一次)
     articles = posts[slice(start, end)]
     # print(articles)
     context = {
@@ -194,6 +194,7 @@ def edit_post():
 
 
 # 删除文章
+# 另一种接收get参数的方式
 @app.route('/dele_post/<post_id>', methods=['GET'])
 @login_required
 def dele_post(post_id):
@@ -211,16 +212,38 @@ def dele_post(post_id):
 @app.route('/api/post', methods=['GET'])
 def post():
     data = Post.query.all()
-    # 检测取出来的数据是不是list类型，结果是true
-    # a = isinstance(data, list)
-    # print(data.to_dict())
-    # print(*data, sep='\n')
-    # for a in data:
-    #     print(a)
-    # 将数据按json格式输出
     posts = []
     for postdata in data:
         # 使用类中的to_json函数进行处理
         posts.append(postdata.to_json())
     # print(jsonify(posts))
+    return jsonify(posts)
+
+
+# 获取指定页数文章数据
+@app.route('/api/post_info', methods=['GET'])
+def post_info():
+    # 获取前端传过来的页数
+    page = int(request.args.get('page'))
+    # 查询所有文章
+    posts = Post.query.all()
+    # 每页显示多少文章
+    per_page = 12
+    # 总的有多少篇文章，使用len函数进行统计
+    total = len(posts)
+    # 每一页开始的位置
+    start = (page - 1) * per_page
+    # 每一页结束的位置
+    end = start + per_page
+    # 使用Pagination函数进行分页，使用bootstrap3模板，
+    pagination = Pagination(page=page, total=total)
+    # 对文章进行切片(每12篇切一次)
+    articles = posts[slice(start, end)]
+    # 定义数组posts用于接收切片且json化后的数据
+    posts = []
+    # 将切片后的数据进行json化处理
+    for postdata in articles:
+        # 使用类中的to_json函数进行处理
+        posts.append(postdata.to_json())
+    # print(posts)
     return jsonify(posts)
