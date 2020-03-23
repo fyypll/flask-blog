@@ -12,9 +12,24 @@ from flask_paginate import Pagination, get_page_parameter
 # 首页
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
-    return render_template('index.html', title='我的', user=user)
+    # 获取页码，若失败则取默认值1
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    posts = Post.query.all()
+    # 每页显示多少文章
+    per_page = 12
+    total = len(posts)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pagination = Pagination(page=page, total=total)
+    # 对文章进行切片(每12篇切一次)
+    articles = posts[slice(start, end)]
+    posts = []
+    # 将切片后的数据进行json化处理
+    for postdata in articles:
+        # 使用类中的to_json函数进行处理
+        posts.append(postdata.to_json())
+    return render_template('index.html', pagination=pagination, posts=posts)
 
 
 # 登录
@@ -79,9 +94,6 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    # result = Post.query.all()
-    # for a in result:
-    #     print('title:%s' % a.title)
     return render_template('user.html', title='用户中心', user=user)
 
 
@@ -152,7 +164,7 @@ def post_manager():
     start = (page - 1) * per_page
     # 每一页结束的位置
     end = start + per_page
-    # 使用Pagination函数进行分页，使用bootstrap3模板，
+    # 使用Pagination函数进行分页，使用bootstrap3模板
     pagination = Pagination(bs_version=3, page=page, total=total)
     # 对文章进行切片(每12篇切一次)
     articles = posts[slice(start, end)]

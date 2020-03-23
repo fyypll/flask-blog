@@ -1,11 +1,159 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="alert alert-info" style="margin-top: 50px">
-    <h1>你好呀, {{ current_user.username }} !</h1>
-    欢迎来到MAPLE博客后台管理系统，在这里你可以轻松的对你发表过的文章进行管理哦
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>MAPLE-记录·时光</title>
+    <meta name="description" content="雪中漫步,瀑布流个人博客模板,博客模板下载,html5学习"/>
+    <meta name="keywords" content="雪中漫步,,瀑布流个人博客模板,博客模板下载,html5学习"/>
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css"/>
+<!--    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css" type="text/css"/>-->
+    <style type="text/css">
+        body, td, th {
+            font-family: calibri, "宋体", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<header id="container2" style="background:#795b59 url(../static/images/images/top.jpg) center 0 scroll no-repeat;">
+    <div class="quotes">
+        <div class="text5">枫林幻境</div>
+        <p>甜言蜜语，我不会，浪漫调情，我不会，对你，只有一颗心。你生命的每一寸时光 我都不愿错过。</p>
+    </div>
+    <div id="nav" class="menu-container">
+        <ul id="menu-0" class="menu">
+            <li id="menu-item-1"><a href="{{ url_for('index') }}">主页</a></li>
+            <li id="menu-item-2"><a href="#">日志</a></li>
+            <li id="menu-item-3"><a href="#">相册</a></li>
+            <li id="menu-item-4"><a href="#">留言板</a></li>
+            <li id="menu-item-5"><a href="#">说说</a></li>
+            <li id="menu-item-6"><a href="#">个人档</a></li>
+            <li id="menu-item-7"><a href="#">音乐</a></li>
+            {% if current_user.is_anonymous %}
+            <li><a href="{{ url_for('login') }}">登录</a></li>
+            {% else %}
+            <li id="menu-item-8"><a href="{{ url_for('user', username=current_user.username) }}">{{current_user.username}}</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</header>
+<!--header-->
+<div id="main" class="main-narrow">
+    <div id="content" class="post-index">
+        {% for post in posts %}
+        <article id="post-103" class="ptype-post">
+            <div class="article-wrap">
+                <header class="entry-header">
+                    <h1>
+                        <a href="#" class="post-title" title="关于雪的爱情句子">{{post.title}}</a>
+                        <span class="meta-time">{{post.post_time}}</span>
+                    </h1>
+                </header>
+                <div class="entry-content">
+                    <p><a href="#" class="post-feature"><img src="../static/images/picture/07.jpg" title="关于雪的爱情句子"></a>
+                    </p>
+                    <p>{{post.body}}</p>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+        <!--post-index-->
+    </div>
+    <!--content-->
+<!--    <nav id="wide-page-navi" class="page-navi">-->
+<!--        <a class="page-numbers" href="#">1</a>-->
+<!--    </nav>-->
+    {{pagination.links}}
 </div>
-
-{% endblock %}
+<p></p>
+<!--main-->
+<footer id="main-footer">
+    <div id="footer-widget">
+        <aside id="footer-comments" class="foo-widget"><h3>最新评论</h3>
+            <ul>
+                <li>
+                    <span><img alt="个人博客评论头像" src="../static/images/picture/1.jpeg" class="avatar"/></span>
+                    <a href="#" title="雪中漫步">不知不觉中冬天已经来。。。</a>
+                </li>
+                <li>
+                    <span><img alt="个人博客评论头像" src="../static/images/picture/2.png" class="avatar"/></span>
+                    <a href="#" title="雪中漫步">宁静的早晨,轻轻拉开落地窗的厚重窗帘</a>
+                </li>
+                <li>
+                    <span><img alt="个人博客评论头像" src="../static/images/picture/3.png" class="avatar"/></span>
+                    <a href="#" title="雪中漫步">雪!飞舞着,轻盈着,飘飘落落,萧萧洒洒。</a>
+                </li>
+                <li>
+                    <span><img alt="个人博客评论头像" src="../static/images/picture/4.jpg" class="avatar"/></span>
+                    <a href="#" title="雪中漫步">这是寒冬季节,北风一吹,寒气扑鼻。</a>
+                </li>
+            </ul>
+        </aside>
+        <aside id="footer-tags" class="foo-widget"><h3>热门标签</h3>
+            <ul class="wp-tag-cloud">
+                <li><a href="#" class="tag-link">雪中漫步</a></li>
+                <li><a href="http://www.lmlblog.com/wo/share/" class="tag-link">个人博客模板</a></li>
+                <li><a href="#" class="tag-link">认真的雪</a></li>
+                <li><a href="#" class="tag-link">独自一人</a></li>
+                <li><a href="#" class="tag-link">雨伞</a></li>
+                <li><a href="#" class="tag-link">时光轴</a></li>
+                <li><a href="#" class="tag-link">冬季</a></li>
+                <li><a href="#" class="tag-link">生活</a></li>
+                <li><a href="#" class="tag-link">孤单的我</a></li>
+                <li><a href="#" class="tag-link">技能</a></li>
+                <li><a href="#" class="tag-link">html5</a></li>
+                <li><a href="#" class="tag-link">前端学习</a></li>
+                <li><a href="#" class="tag-link">好友</a></li>
+                <li><a href="#" class="tag-link">爱听歌</a></li>
+                <li><a href="#" class="tag-link">div+css</a></li>
+            </ul>
+            <ul></ul>
+        </aside>
+        <aside id="footer-readwall" class="foo-widget readwall"><h3>留言墙</h3>
+            <ul>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s0.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/03.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/text02.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s3.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s5.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+                <li><a href="#"><img alt="个人头像" src="../static/images/picture/08.jpg" class="avatar"/></a><span
+                        class="author" style="display:none"></span>
+                </li>
+            </ul>
+        </aside>
+    </div>
+    <div id="footer-copy">Design by 2016/12/32&nbsp; 星期八&nbsp;&nbsp;广州天气：晴/阴/小雨/多云/未知&nbsp;&nbsp;雪中漫步个人博客模板&nbsp;&nbsp;模板下载地址：更新中...
+    </div>
+    <div class="clear"></div>
+</footer>
+<!--footer-->
+<script type="text/javascript" src="../static/bootstrap/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../static/js/responsive.js"></script>
+<script src="../static/js/snowy.js"></script>
+<script src="../static/js/snow.js"></script>
+<style type="text/css">
+    .snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100001;
+    }
+</style>
+<div class="snow-container"></div>
+</body>
+</html>
 
 
