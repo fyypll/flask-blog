@@ -1,10 +1,7 @@
-﻿/*
-Theme Name: Snow color of love
-*/
-@import url("reset.css");
+﻿@import url("reset.css");
 
 body {
-    background: #383336;
+    background: #35739c;
     font-family: calibri, '宋体', Arial, sans-serif;
     font-size: 14px;
     line-height: 2em;
@@ -220,7 +217,7 @@ label, button, input, select, textarea {
     height: 50px;
     font-family: "微软雅黑";
     font-size: 16px;
-    background: #b5accd url(../images/images/menu_bg.png);
+    background-color: #417eaa;
     text-align: center;
     position: relative;
 }
@@ -239,7 +236,7 @@ label, button, input, select, textarea {
 }
 
 #nav ul li:hover {
-    background: #795b59;
+    background: #06a2e4;
     border-radius: 50px 0;
 }
 
@@ -727,7 +724,7 @@ ul.mobile .commlist-middle {
 /*@footer
 ***********************************/
 #main-footer {
-    background: #222;
+    background: #4c4c4c;
     text-align: center;
 }
 
@@ -860,7 +857,7 @@ ul.mobile .commlist-middle {
 }
 
 #menu-item-1 {
-    background: #795b59;
+    background: #06a2e4;
     border-radius: 50px 0;
 }
 
@@ -893,11 +890,11 @@ ul.mobile .commlist-middle {
 }
 
 .pagination li a:hover {
-    background-color: #df846c;
+    background-color: #06a2e4;
 }
 
 .pagination .active a {
-    background-color: #df846c;
+    background-color: #06a2e4;
 }
 
 /*文章*/

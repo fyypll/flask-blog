@@ -58,98 +58,37 @@
         <!--post-index-->
     </div>
     <!--content-->
-<!--    <nav id="wide-page-navi" class="page-navi">-->
-<!--        <a class="page-numbers" href="#">1</a>-->
-<!--    </nav>-->
+    <!--    <nav id="wide-page-navi" class="page-navi">-->
+    <!--        <a class="page-numbers" href="#">1</a>-->
+    <!--    </nav>-->
     {{pagination.links}}
 </div>
 <p></p>
 <!--main-->
 <footer id="main-footer">
-    <div id="footer-widget">
-        <aside id="footer-comments" class="foo-widget"><h3>最新评论</h3>
-            <ul>
-                <li>
-                    <span><img alt="个人博客评论头像" src="../static/images/picture/1.jpeg" class="avatar"/></span>
-                    <a href="#" title="雪中漫步">不知不觉中冬天已经来。。。</a>
-                </li>
-                <li>
-                    <span><img alt="个人博客评论头像" src="../static/images/picture/2.png" class="avatar"/></span>
-                    <a href="#" title="雪中漫步">宁静的早晨,轻轻拉开落地窗的厚重窗帘</a>
-                </li>
-                <li>
-                    <span><img alt="个人博客评论头像" src="../static/images/picture/3.png" class="avatar"/></span>
-                    <a href="#" title="雪中漫步">雪!飞舞着,轻盈着,飘飘落落,萧萧洒洒。</a>
-                </li>
-                <li>
-                    <span><img alt="个人博客评论头像" src="../static/images/picture/4.jpg" class="avatar"/></span>
-                    <a href="#" title="雪中漫步">这是寒冬季节,北风一吹,寒气扑鼻。</a>
-                </li>
-            </ul>
-        </aside>
-        <aside id="footer-tags" class="foo-widget"><h3>热门标签</h3>
-            <ul class="wp-tag-cloud">
-                <li><a href="#" class="tag-link">雪中漫步</a></li>
-                <li><a href="#" class="tag-link">认真的雪</a></li>
-                <li><a href="#" class="tag-link">独自一人</a></li>
-                <li><a href="#" class="tag-link">雨伞</a></li>
-                <li><a href="#" class="tag-link">时光轴</a></li>
-                <li><a href="#" class="tag-link">冬季</a></li>
-                <li><a href="#" class="tag-link">生活</a></li>
-                <li><a href="#" class="tag-link">孤单的我</a></li>
-                <li><a href="#" class="tag-link">技能</a></li>
-                <li><a href="#" class="tag-link">html5</a></li>
-                <li><a href="#" class="tag-link">前端学习</a></li>
-                <li><a href="#" class="tag-link">好友</a></li>
-                <li><a href="#" class="tag-link">爱听歌</a></li>
-                <li><a href="#" class="tag-link">div+css</a></li>
-            </ul>
-            <ul></ul>
-        </aside>
-        <aside id="footer-readwall" class="foo-widget readwall"><h3>留言墙</h3>
-            <ul>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s0.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/03.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/text02.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s3.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/s5.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-                <li><a href="#"><img alt="个人头像" src="../static/images/picture/08.jpg" class="avatar"/></a><span
-                        class="author" style="display:none"></span>
-                </li>
-            </ul>
-        </aside>
+    <div id="footer-copy">Corpyright &copy; 2020 贵州师范大学 -- 路坤 ALL Rights Reserved. 版权所有&nbsp;&nbsp; MAPLE博客 &nbsp;-&nbsp; 记录·时光
     </div>
-    <div id="footer-copy">Design by 2016/12/32&nbsp; 星期八&nbsp;&nbsp;广州天气：晴/阴/小雨/多云/未知&nbsp;&nbsp;雪中漫步个人博客模板&nbsp;&nbsp;模板下载地址：更新中...
-    </div>
-    <div class="clear"></div>
 </footer>
 <!--footer-->
 <script type="text/javascript" src="../static/bootstrap/js/jquery-3.2.1.min.js"></script>
+<!--计算文章宽度-->
 <script type="text/javascript" src="../static/js/responsive.js"></script>
-<script src="../static/js/snowy.js"></script>
-<script src="../static/js/snow.js"></script>
-<style type="text/css">
-    .snow-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 100001;
-    }
-</style>
-<div class="snow-container"></div>
+<!--树叶飘落特效-->
+<script src="../static/r/breakpoints.min.js"></script>
+<script src="../static/r/main.js"></script>
+<script src="../static/r/pf.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('body').wpSuperSnow({
+            flakes: ['../static/r/6.png', '../static/r/5.png', '../static/r/4.png', '../static/r/2.png', '../static/r/1.png', '../static/r/3.png', '../static/r/2.png', '../static/r/1.png',],
+            totalFlakes: '90',
+            zIndex: '999999',
+            maxSize: '30',
+            maxDuration: '20',
+            useFlakeTrans: false
+        });
+    });
+</script>
 </body>
 </html>
 
