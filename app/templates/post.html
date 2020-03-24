@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="main" class="main-narrow">
+    <div id="content" class="post-index">
+        {% for post in posts %}
+        <article id="post-103" class="ptype-post">
+            <div class="article-wrap">
+                <header class="entry-header">
+                    <h1>
+                        <a href="#" class="post-title" title="关于雪的爱情句子">{{post.title}}</a>
+                        <span class="meta-time">{{post.post_time}}</span>
+                    </h1>
+                </header>
+                <div class="entry-content">
+                    <a href="#" class="post-feature"><img src="../static/images/picture/07.jpg" title="关于雪的爱情句子"></a>
+                    <p>{{post.body}}</p>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+        <!--post-index-->
+    </div>
+    <!--content-->
+    <!--    <nav id="wide-page-navi" class="page-navi">-->
+    <!--        <a class="page-numbers" href="#">1</a>-->
+    <!--    </nav>-->
+    {{pagination.links}}
+</div>
+{% endblock %}

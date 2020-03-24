@@ -18,24 +18,24 @@
 
 <div class="table-responsive">
     <table class="table table-condensed table-bordered">
-        <caption>文章管理</caption>
+        <caption>用户管理</caption>
         <tr>
-            <th>文章名</th>
+            <th>用户名</th>
             <th>编辑</th>
             <th>删除</th>
         </tr>
-        <!-- 取出文章数据 -->
-        {% for post in articles %}
+        <!-- 取出用户数据 -->
+        {% for user in users %}
         <tr>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ user.username }}</td>
             <!-- 将文章id通过get方式传过去 -->
-            <td><a href="{{ url_for('edit_post',post_id=post.id) }}">
+            <td><a href="{{ url_for('edit_user',user_id=user.id) }}">
                 <button class="btn btn-success" type="button">
                     <span class="glyphicon glyphicon glyphicon glyphicon-pencil"></span>
                     编辑
                 </button>
             </a></td>
-            <td><a href="{{ url_for('dele_post',post_id=post.id) }}">
+            <td><a href="{{ url_for('dele_user',user_id=user.id) }}">
                 <button class="btn btn-danger" type="button">
                     <span class="glyphicon glyphicon glyphicon-trash"></span>
                     删除

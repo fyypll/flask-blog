@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
 {% block content %}
 
@@ -9,14 +9,14 @@
         <label>{{ form.post_title.label }}</label>
         {{ form.post_title(size=100, class="form-control") }}
         {% for error in form.post_title.errors %}
-        <span style="color: red;">[{{ error }}]</span>
+        <span class="text-danger">{{ error }}</span>
         {% endfor %}
     </div>
     <div class="form-group">
         <label>{{ form.post_body.label }}</label>
         {{ form.post_body(cols=100, rows=10, class="form-control") }}<br>
         {% for error in form.post_body.errors %}
-        <span style="color: red;">[{{ error }}]</span>
+        <span class="text-danger">{{ error }}</span>
         {% endfor %}
     </div>
     <p>{{ form.submit(class="btn btn-primary") }}</p>

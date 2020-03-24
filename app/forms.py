@@ -85,15 +85,30 @@ class EditProfileForm(FlaskForm):
             raise ValidationError('用户名长度不能大于15位哦!')
 
 
-# 发文章表格
+# 发文章的表格
 class SendPostForm(FlaskForm):
     post_title = StringField('标题', validators=[DataRequired()])
     post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
     submit = SubmitField('发表')
 
 
-# 编辑文章表格
+# 编辑文章的表格
 class EditPostForm(FlaskForm):
     post_title = StringField('标题', validators=[DataRequired()])
     post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
     submit = SubmitField('发表')
+
+
+# 编辑用户的表格
+class EditUserForm(FlaskForm):
+    username = StringField('用户名', validators=[DataRequired()])
+    email = StringField('邮箱', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
+    about_me = TextAreaField('签名', validators=[Length(min=0, max=140)])
+    submit = SubmitField('更新')
+
+    # 校验邮箱
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        # 如果邮箱在数据库中已存在
+        if user is not None:
+            raise ValidationError('邮箱已存在，换一个?')

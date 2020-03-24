@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from werkzeug.urls import url_parse
@@ -29,7 +29,7 @@ def index():
     for postdata in articles:
         # 使用类中的to_json函数进行处理
         posts.append(postdata.to_json())
-    return render_template('index.html', pagination=pagination, posts=posts)
+    return render_template('post.html', pagination=pagination, posts=posts)
 
 
 # 登录
@@ -94,7 +94,7 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', title='用户中心', user=user)
+    return render_template('user.html', title='个人中心', user=user)
 
 
 # 中户中心显示最后登录时间
@@ -202,7 +202,7 @@ def edit_post():
     else:
         flash('这篇文章不是你写的哦!')
         return redirect(url_for('post_manager'))
-    return render_template('edit_post.html', title='文章编辑', form=form, )
+    return render_template('edit_post.html', title='文章编辑', form=form)
 
 
 # 删除文章
@@ -217,6 +217,69 @@ def dele_post(post_id):
     flash('文章已成功删除!')
     # 删除后返回文章管理页面
     return redirect(url_for('post_manager'))
+
+
+# 用户管理（管理员可用）
+@app.route('/user_manager')
+@login_required
+def user_manager():
+    # 获取当前已登录用户id
+    userId = current_user.id
+    if userId == 1:
+        # 排除管理员，也就是id为1的用户
+        users = User.query.filter(User.id != 1).all()
+        per_page = 12
+        total = len(users)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        start = (page - 1) * per_page
+        end = start + per_page
+        pagination = Pagination(bs_version=3, page=page, total=total)
+        usersData = users[slice(start, end)]
+        context = {
+            'pagination': pagination,
+            'users': usersData
+        }
+        return render_template('user_manager.html', title='用户管理', **context)
+    else:
+        return redirect(url_for('post_manager'))
+
+
+# 编辑用户信息（管理员可用）
+@app.route('/edit_user', methods=['GET', 'POST'])
+@login_required
+def edit_user():
+    form = EditUserForm()
+    user_id = request.args.get('user_id')
+    user_info = User.query.filter(User.id == user_id).first_or_404()
+    if current_user.id == 1:
+        # 是否是post请求且数据是是否有效
+        if form.validate_on_submit():
+            user_info.username = form.username.data
+            user_info.email = form.email.data
+            user_info.about_me = form.about_me.data
+            db.session.commit()
+            flash('用户信息更新成功!')
+            return redirect(url_for('user_manager'))
+        elif request.method == 'GET':
+            form.username.data = user_info.username
+            form.email.data = user_info.email
+            form.about_me.data = user_info.about_me
+        return render_template('edit_user.html', title='编辑用户信息', form=form)
+    else:
+        return redirect(url_for('post_manager'))
+
+
+# 删除用户
+@app.route('/dele_user', methods=['GET'])
+@login_required
+def dele_user():
+    user_id = request.args.get('user_id')
+    user_info = User.query.filter_by(id=user_id).first_or_404()
+    db.session.delete(user_info)
+    db.session.commit()
+    flash('用户已成功删除!')
+    # 删除后返回文章管理页面
+    return redirect(url_for('user_manager'))
 
 
 # 文章相关api
