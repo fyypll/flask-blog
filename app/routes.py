@@ -292,16 +292,16 @@ def liuyan():
     liuyandata = []
     if request.method == 'GET':
         # 倒序排序，依据为时间
-        liuyan = Liuyan.query.order_by(Liuyan.liuyan_time.desc()).all()
+        liuyan = Liuyan.query.order_by(Liuyan.send_time.desc()).all()
         for ly in liuyan:
             # 使用类中的to_json函数进行处理
             liuyandata.append(ly.to_json())
     else:
-        liuyan_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        send_time = datetime.now().strftime("%Y-%m-%d %H:%M")
         username = form.username.data
         email = form.email.data
         body = form.body.data
-        liuyan = Liuyan(username=username, email=email, body=body, liuyan_time=liuyan_time)
+        liuyan = Liuyan(username=username, email=email, body=body, send_time=send_time)
         # 如果发的评论在数据库表中已经存在
         if db.session.query(exists().where(Liuyan.body == body)).scalar():
             flash('不可发布重复评论')
@@ -339,21 +339,38 @@ def post_info():
     post_user = User.query.filter_by(id=post_info.user_id).first_or_404()
     username = post_user.username
 
-    # 文章评论
-    # comments_info = Comments.query.order_by(Comments.comment_time.desc()).all()
-    comments_info = Comments.query.filter_by(post_id=post_id).all()
-    print(comments_info)
-    # 分页
-    per_page = 12
-    total = len(comments_info)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    start = (page - 1) * per_page
-    end = start + per_page
-    pagination = Pagination(page=page, total=total)
-    # 对文章进行切片
-    comments = comments_info[slice(start, end)]
-    context = {
-        'pagination': pagination,
-        'comments': comments
-    }
+    if request.method == 'GET':
+        # 文章评论
+        commentsData = []
+        comments_info = Comments.query.filter_by(post_id=post_id).order_by(Comments.send_time.desc()).all()
+        for cm_inf in comments_info:
+            # 使用类中的to_json函数进行处理
+            commentsData.append(cm_inf.to_json())
+        # 分页
+        per_page = 12
+        total = len(commentsData)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        start = (page - 1) * per_page
+        end = start + per_page
+        pagination = Pagination(page=page, total=total)
+        # 对文章进行切片
+        comments = commentsData[slice(start, end)]
+        context = {
+            'pagination': pagination,
+            'liuyandata': comments
+        }
+    else:
+        send_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        username = form.username.data
+        email = form.email.data
+        body = form.body.data
+        comments = Comments(username=username, email=email, body=body, send_time=send_time, post_id=post_id)
+        # 如果发的评论在数据库表中已经存在
+        if db.session.query(exists().where(Comments.body == body)).scalar():
+            flash('不可发布重复评论')
+            return redirect(url_for('post_info', post_id=post_id))
+        else:
+            db.session.add(comments)
+            db.session.commit()
+            return redirect(url_for('post_info', post_id=post_id))
     return render_template('post.html', post_info=post_info, username=username, form=form, **context)
