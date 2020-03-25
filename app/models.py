@@ -70,6 +70,12 @@ class Liuyan(db.Model):
     def __repr__(self):
         return '<body:{}>'.format(self.body)
 
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
+
 
 # 评论
 class Comments(db.Model):

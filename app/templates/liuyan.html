@@ -6,20 +6,43 @@
         <span class="widget-title text-left">添加新评论</span>
         <form method="post" action="" id="comment-form">
             <p>
-                <textarea rows="5" name="text" id="textarea" placeholder="在这里输入你的评论..." style="resize:none;"
-                          required=""></textarea>
+                {{form.body(rows="5",placeholder="在这里输入你的评论...")}}
             </p>
             <div class="info">
-                <input class="comment-input" type="text" name="author" id="author" placeholder="称呼 *" value=""
-                       required="">
-                <input class="comment-input" type="email" name="mail" id="mail" placeholder="电子邮件 *" value=""
-                       required="">
-                <input class="comment-input" type="url" name="url" id="url" disabled placeholder="网站" value="">
+                {{form.username(class="comment-input",placeholder="称呼 *")}}
+                {{form.email(class="comment-input",placeholder="电子邮件 *")}}
+                <input class="comment-input" type="url" disabled placeholder="网站">
+
+                <!--显示闪现的消息-->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ur>
+                    {% for message in messages %}
+                    <input class="comment-input" type="url" disabled placeholder="{{ message }}">
+                    {% endfor %}
+                </ur>
+                {% endif %}
+                {% endwith %}
+
             </div>
-            <p><input type="submit" value="提交评论" class="button" id="submit"></p>
+            <p>
+                {{form.submit(class="button",value="提交评论")}}
+            </p>
         </form>
     </div>
 </div>
 <div class="line"></div>
 <div class="message"></div>
+
+<!--评论-->
+{% for ly in liuyandata %}
+<div class="ly-info">
+    <div class="ly-main">
+        <div class="ly-user">{{ly.username}}</div>
+        <div class="ly-time">{{ly.liuyan_time}}</div>
+    </div>
+    <div class="ly-body">{{ly.body}}</div>
+</div>
+
+{% endfor %}
 {% endblock %}

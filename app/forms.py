@@ -112,3 +112,11 @@ class EditUserForm(FlaskForm):
         # 如果邮箱在数据库中已存在
         if user is not None:
             raise ValidationError('邮箱已存在，换一个?')
+
+
+# 留言板表格
+class SendLiuYanForm(FlaskForm):
+    username = StringField('称呼', validators=[DataRequired()])
+    email = StringField('电子邮件', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
+    body = TextAreaField('添加新评论', validators=[Length(min=10, max=10000)])
+    submit = SubmitField('提交评论')

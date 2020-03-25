@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm, \
+    SendLiuYanForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Post
+from app.models import User, Post, Liuyan
 from werkzeug.urls import url_parse
 from datetime import datetime
 from flask_paginate import Pagination, get_page_parameter
@@ -285,49 +286,23 @@ def dele_user():
 # 留言板
 @app.route('/liuyan', methods=['GET', 'POST'])
 def liuyan():
-    return render_template('liuyan.html')
+    form = SendLiuYanForm()
+    if request.method == 'GET':
+        # 倒序排序，依据为时间
+        liuyan = Liuyan.query.order_by(Liuyan.liuyan_time.desc()).all()
+        liuyandata = []
+        for ly in liuyan:
+            # 使用类中的to_json函数进行处理
+            liuyandata.append(ly.to_json())
+    else:
+        liuyan_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        username = form.username.data
+        email = form.email.data
+        body = form.body.data
+        liuyan = Liuyan(username=username, email=email, body=body, liuyan_time=liuyan_time)
+        db.session.add(liuyan)
+        db.session.commit()
+        flash('评论发表成功')
+    return render_template('liuyan.html', liuyandata=liuyandata, form=form)
 
 
-# 文章相关api
-# 获取所有用户文章数据
-@app.route('/api/post', methods=['GET'])
-def post():
-    data = Post.query.all()
-    posts = []
-    for postdata in data:
-        # 使用类中的to_json函数进行处理
-        posts.append(postdata.to_json())
-    # print(jsonify(posts))
-    return jsonify(posts)
-
-
-# 获取指定页数文章数据
-@app.route('/api/post_info', methods=['GET'])
-def post_info():
-    # 获取前端传过来的页数
-    page = int(request.args.get('page'))
-    # 查询所有文章
-    posts = Post.query.all()
-    # 每页显示多少文章
-    per_page = 12
-    # 总的有多少篇文章，使用len函数进行统计
-    total = len(posts)
-    # 每一页开始的位置
-    start = (page - 1) * per_page
-    # 每一页结束的位置
-    end = start + per_page
-    # 使用Pagination函数进行分页，使用bootstrap3模板，
-    pagination = Pagination(page=page, total=total)
-    # 对文章进行切片(每12篇切一次)
-    articles = posts[slice(start, end)]
-    # 定义数组posts用于接收切片且json化后的数据
-    a = {}
-    posts = []
-    # 将切片后的数据进行json化处理
-    for postdata in articles:
-        # 使用类中的to_json函数进行处理
-        posts.append(postdata.to_json())
-    # print(posts)
-    # 文章总页数
-    # pagination.total_pages
-    return jsonify(posts)

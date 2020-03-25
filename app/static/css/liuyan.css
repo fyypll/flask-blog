@@ -70,7 +70,7 @@
 }
 
 #submit:hover {
-    background-color: #21bc9c!important;
+    background-color: #21bc9c !important;
     -webkit-transition: all 0.5s ease-out;
     -moz-transition: all 0.5s ease-out;
     -ms-transition: all 0.5s ease-out;
@@ -89,7 +89,7 @@
     vertical-align: top;
 }
 
-.line{
+.line {
     border-bottom: 0.125rem solid #06a2e4;
     margin-bottom: 1rem;
 }
@@ -136,11 +136,30 @@ textarea:-ms-input-placeholder { /* Internet Explorer 10+  适配ie*/
     color: #fff;
 }
 
-/*.info{*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*}*/
-
+/*将评论框右边与其他元素大小统一*/
 * {
     box-sizing: border-box;
+}
+
+.ly-info {
+    border: 0.025rem dashed #06a2e4;
+    margin-bottom: 1rem;
+}
+
+.ly-main {
+    padding-left: 0.5rem;
+}
+
+.ly-user {
+    font-size: 16px;
+    font-weight: bold;
+    color: #06a2e4;
+}
+
+.ly-time{
+    color: #77a7cf;
+}
+
+.ly-body{
+    padding-left: 0.5rem;
 }
