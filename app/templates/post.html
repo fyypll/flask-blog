@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="post-main">
+    <div class="post-title">
+        <h1>{{post_info.title}}</h1>
+    </div>
+    <div class="post-info">
+        <div class="post-user">
+            作者：{{username}}
+        </div>
+        <div class="post-time">
+            发表于：{{post_info.post_time}}
+        </div>
+    </div>
+    <div class="post-body">
+        <p>{{post_info.body}}</p>
+    </div>
+</div>
+
+{% endblock %}

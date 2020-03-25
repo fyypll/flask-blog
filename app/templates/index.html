@@ -7,12 +7,12 @@
         <div class="article-wrap">
             <header class="entry-header">
                 <h1>
-                    <a href="#" class="post-title" title="关于雪的爱情句子">{{post.title}}</a>
+                    <a href="{{ url_for('post_info',post_id=post.id) }}" class="post-title" title="{{post.title}}">{{post.title}}</a>
                     <span class="meta-time">{{post.post_time}}</span>
                 </h1>
             </header>
             <div class="entry-content">
-                <a href="#" class="post-feature"><img src="../static/images/picture/07.jpg" title="关于雪的爱情句子"></a>
+                <a href="#" class="post-feature"><img src="../static/images/picture/07.jpg" title="{{post.body}}"></a>
                 <p>{{post.body}}</p>
             </div>
         </div>
