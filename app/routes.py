@@ -6,7 +6,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm, \
     SendLiuYanForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Post, Liuyan
+from app.models import User, Post, Liuyan, Comments
 from werkzeug.urls import url_parse
 from datetime import datetime
 from flask_paginate import Pagination, get_page_parameter
@@ -329,7 +329,7 @@ def liuyan():
 # 文章详情页
 @app.route('/post_info', methods=['GET', 'POST'])
 def post_info():
-    # form = SendLiuYanForm()
+    form = SendLiuYanForm()
     post_id = request.args.get('post_id')
     post_data = []
     # 根据文章id查询文章数据
@@ -338,17 +338,22 @@ def post_info():
     # 查询文章作者
     post_user = User.query.filter_by(id=post_info.user_id).first_or_404()
     username = post_user.username
+
+    # 文章评论
+    # comments_info = Comments.query.order_by(Comments.comment_time.desc()).all()
+    comments_info = Comments.query.filter_by(post_id=post_id).all()
+    print(comments_info)
     # 分页
-    # per_page = 12
-    # total = len(liuyandata)
-    # page = request.args.get(get_page_parameter(), type=int, default=1)
-    # start = (page - 1) * per_page
-    # end = start + per_page
-    # pagination = Pagination(page=page, total=total)
-    # # 对文章进行切片
-    # liu = liuyandata[slice(start, end)]
-    # context = {
-    #     'pagination': pagination,
-    #     'comments': liu
-    # }
-    return render_template('post.html', post_info=post_info, username=username)
+    per_page = 12
+    total = len(comments_info)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pagination = Pagination(page=page, total=total)
+    # 对文章进行切片
+    comments = comments_info[slice(start, end)]
+    context = {
+        'pagination': pagination,
+        'comments': comments
+    }
+    return render_template('post.html', post_info=post_info, username=username, form=form, **context)

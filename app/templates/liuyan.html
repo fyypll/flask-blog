@@ -1,50 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="comments">
-    <div class="respond">
-        <span class="widget-title text-left">添加新评论</span>
-        <form method="post" action="" id="comment-form">
-            <p>
-                {{form.body(rows="5",placeholder="在这里输入你的评论...")}}
-            </p>
-            <div class="info">
-                {{form.username(class="comment-input",placeholder="称呼 *")}}
-                {{form.email(class="comment-input",placeholder="电子邮件 *")}}
-                <input class="comment-input" type="url" disabled placeholder="网站">
-
-                <!--显示闪现的消息-->
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <ur>
-                    {% for message in messages %}
-                    <input class="ly-warning" disabled placeholder="{{ message }}">
-                    {% endfor %}
-                </ur>
-                {% endif %}
-                {% endwith %}
-
-            </div>
-            <p>
-                {{form.submit(class="button",value="提交评论")}}
-            </p>
-        </form>
-    </div>
-</div>
-<div class="line"></div>
-<div class="message"></div>
 
 <!--评论-->
-{% for ly in liuyandata %}
-<div class="ly-info">
-    <div class="ly-main">
-        <div class="ly-user">{{ly.username}}</div>
-        <div class="ly-time">{{ly.liuyan_time}}</div>
-    </div>
-    <div class="ly-body">{{ly.body}}</div>
-</div>
-{% endfor %}
-<!--分页-->
-{{pagination.links}}
+{% include 'comments.html' %}
 
 {% endblock %}
