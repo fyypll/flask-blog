@@ -6,6 +6,7 @@ from app import db, login
 from hashlib import md5
 
 
+# 用户
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -37,6 +38,7 @@ class User(UserMixin, db.Model):
             digest, size)
 
 
+# 文章
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,12 +58,28 @@ class Post(db.Model):
         return dict
 
 
+# 留言
 class Liuyan(db.Model):
     __tablename__ = 'liuyan'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64))
     body = db.Column(db.Text)
     email = db.Column(db.String(120))
+    liuyan_time = db.Column(db.String(20))
+
+    def __repr__(self):
+        return '<body:{}>'.format(self.body)
+
+
+# 评论
+class Comments(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
+    body = db.Column(db.Text)
+    email = db.Column(db.String(120))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    comment_time = db.Column(db.String(20))
 
     def __repr__(self):
         return '<body:{}>'.format(self.body)
