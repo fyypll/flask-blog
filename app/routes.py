@@ -310,4 +310,17 @@ def liuyan():
             db.session.add(liuyan)
             db.session.commit()
             return redirect(url_for('liuyan'))
-    return render_template('liuyan.html', liuyandata=liuyandata, form=form)
+    # 分页
+    per_page = 12
+    total = len(liuyandata)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pagination = Pagination(page=page, total=total)
+    # 对文章进行切片
+    liu = liuyandata[slice(start, end)]
+    context = {
+        'pagination': pagination,
+        'liuyandata': liu
+    }
+    return render_template('liuyan.html', form=form, **context)
