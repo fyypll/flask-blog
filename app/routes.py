@@ -1,4 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request
+from sqlalchemy.sql import exists
+
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm, \
@@ -287,10 +289,10 @@ def dele_user():
 @app.route('/liuyan', methods=['GET', 'POST'])
 def liuyan():
     form = SendLiuYanForm()
+    liuyandata = []
     if request.method == 'GET':
         # 倒序排序，依据为时间
         liuyan = Liuyan.query.order_by(Liuyan.liuyan_time.desc()).all()
-        liuyandata = []
         for ly in liuyan:
             # 使用类中的to_json函数进行处理
             liuyandata.append(ly.to_json())
@@ -300,9 +302,12 @@ def liuyan():
         email = form.email.data
         body = form.body.data
         liuyan = Liuyan(username=username, email=email, body=body, liuyan_time=liuyan_time)
-        db.session.add(liuyan)
-        db.session.commit()
-        flash('评论发表成功')
+        # 如果发的评论在数据库表中已经存在
+        if db.session.query(exists().where(Liuyan.body == body)).scalar():
+            flash('不可发布重复评论')
+            return redirect(url_for('liuyan'))
+        else:
+            db.session.add(liuyan)
+            db.session.commit()
+            return redirect(url_for('liuyan'))
     return render_template('liuyan.html', liuyandata=liuyandata, form=form)
-
-

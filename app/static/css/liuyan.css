@@ -156,10 +156,22 @@ textarea:-ms-input-placeholder { /* Internet Explorer 10+  适配ie*/
     color: #06a2e4;
 }
 
-.ly-time{
+.ly-time {
     color: #77a7cf;
 }
 
-.ly-body{
+.ly-body {
     padding-left: 0.5rem;
+}
+
+.ly-warning {
+    height: 3rem;
+    line-height: 1rem;
+    display: inline-block;
+    padding: 0.438rem 0.525rem;
+    margin-top: 0.625rem;
+    border: 0.125rem solid red;
+    border-radius: 0.3125rem;
+    color: #fff;
+    background-color: transparent;
 }
