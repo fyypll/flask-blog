@@ -1,0 +1,146 @@
+#comments .respond {
+    margin-top: 3.75rem;
+}
+
+#comments .widget-title {
+    display: block;
+    color: #1abc9c;
+    font-size: 1.5625rem;
+    font-weight: 500;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+#comment-form {
+    padding-top: 0.9375rem;
+    font-size: 0.875rem;
+}
+
+#comment-form {
+    padding-top: 0.9375rem;
+    font-size: 0.875rem;
+}
+
+@media (min-width: 993px) {
+    #comment-form {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 992px) {
+    #comment-form {
+        white-space: normal;
+    }
+}
+
+#comment-form #submit.button {
+    width: 100%;
+    margin-top: 0.625rem;
+}
+
+#comment-form input.comment-input {
+    height: 3rem;
+    line-height: 1rem;
+    display: inline-block;
+    padding: 0.438rem 0.525rem;
+    margin-top: 0.625rem;
+    border: 0.125rem solid #06a2e4;
+    border-radius: 0.3125rem;
+    color: #fff;
+}
+
+#comment-form input#submit {
+    cursor: pointer;
+    color: #fff;
+    background-color: #06a2e4;
+    border: 0;
+    margin: 0 auto;
+    border-radius: 0.3125rem;
+    display: block;
+    padding: 0 1rem;
+    height: 3rem;
+    font-weight: 500;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -ms-transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+
+#submit:hover {
+    background-color: #21bc9c!important;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -ms-transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+
+#comment-form textarea {
+    display: inline-block;
+    padding: 0.438rem 0.525rem;
+    border: 0.125rem solid #06a2e4;
+    border-radius: 0.3125rem;
+    color: #fff;
+    overflow-y: visible;
+    width: 100%;
+    vertical-align: top;
+}
+
+.line{
+    border-bottom: 0.125rem solid #06a2e4;
+    margin-bottom: 1rem;
+}
+
+#comment-form input.comment-input,
+#comment-form textarea {
+    -webkit-appearance: none;
+    outline: 0 !important;
+    /*背景透明*/
+    background-color: transparent;
+}
+
+/*input框中placeholder颜色*/
+input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
+    color: #fff;
+}
+
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 适配火狐 */
+    color: #fff;
+}
+
+input::-moz-placeholder { /* Mozilla Firefox 19+ 适配火狐 */
+    color: #fff;
+}
+
+input:-ms-input-placeholder { /* Internet Explorer 10+  适配ie*/
+    color: #fff;
+}
+
+/*textarea中placeholder颜色*/
+textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
+    color: #fff;
+}
+
+textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 适配火狐 */
+    color: #fff;
+}
+
+textarea::-moz-placeholder { /* Mozilla Firefox 19+ 适配火狐 */
+    color: #fff;
+}
+
+textarea:-ms-input-placeholder { /* Internet Explorer 10+  适配ie*/
+    color: #fff;
+}
+
+/*.info{*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*}*/
+
+* {
+    box-sizing: border-box;
+}

@@ -56,6 +56,17 @@ class Post(db.Model):
         return dict
 
 
+class Liuyan(db.Model):
+    __tablename__ = 'liuyan'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
+    body = db.Column(db.Text)
+    email = db.Column(db.String(120))
+
+    def __repr__(self):
+        return '<body:{}>'.format(self.body)
+
+
 # 用户加载
 @login.user_loader
 def load_user(id):

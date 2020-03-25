@@ -29,7 +29,7 @@ def index():
     for postdata in articles:
         # 使用类中的to_json函数进行处理
         posts.append(postdata.to_json())
-    return render_template('post.html', pagination=pagination, posts=posts)
+    return render_template('index.html', pagination=pagination, posts=posts)
 
 
 # 登录
@@ -283,8 +283,7 @@ def dele_user():
 
 
 # 留言板
-@app.route('/liuyan', methods=['GET'])
-@login_required
+@app.route('/liuyan', methods=['GET', 'POST'])
 def liuyan():
     return render_template('liuyan.html')
 
