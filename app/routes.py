@@ -282,6 +282,13 @@ def dele_user():
     return redirect(url_for('user_manager'))
 
 
+# 留言板
+@app.route('/liuyan', methods=['GET'])
+@login_required
+def liuyan():
+    return render_template('liuyan.html')
+
+
 # 文章相关api
 # 获取所有用户文章数据
 @app.route('/api/post', methods=['GET'])
