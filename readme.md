@@ -25,11 +25,12 @@ python版本3.7.4
 
 
 关于部署到服务器
-用宝塔面板，安装python包管理器，安装好nginx，安装相应的python3.7版本
+用宝塔面板，安装python项目管理器、nginx、mysql、安装相应的python3.7版本
 
 
 nginx配置
-
+    
+    # 监听端口
     listen 80;
     server_name 公网ip或域名;
     
@@ -41,31 +42,36 @@ nginx配置
     }
  
  
- wsgi配置
+ wsgi配置 uwsgi.ini文件
  
 
     [uwsgi]
-    # chdir — 目所在的目
+    # chdir — 项目所在的目录
     chdir=/www/wwwroot/maple
-    # virtualenv — 目境的目
+    # virtualenv — 虚拟环境目录
     virtualenv=/www/wwwroot/maple/maple_venv
-    # 的model 
-    # start:app
+    # myblog:app（启动文件和flask实例化的变量名）
     module=myblog:app
-    # 文件
+    # 启动文件
     wsgi-file=myblog.py
     callable=app
-    #一master程管理其他程，以上述配置例，其中的4uwsgi程都是master程的子程，如果killmaster程，相于重所有的uwsgi程
+    # master进程管理其他进程，以上述配置例子，其中的uwsgi程都是master程的子程，如果kill master程，相于重启所有的uwsgi进程
     master=true
-    #程量
+    # 进程量
     processes=4 
-    #程量
+    # 线程量
     threads=2
-    ###使程在后台行，并日志打到指定的日志文件或者udp服器，日志文件自建
-    #daemonize=/var/log/uwsgi/test.log
-    #其中socket是用uwsgi与nginx之通信的，所以两者要一致
+    # 使程序在后台运行，并将日志打到指定的日志文件或者udp服器，日志文件自建
+    # daemonize=/var/log/uwsgi/test.log
+    # 其中socket是用uwsgi与nginx之通信的，所以两者要一致
     socket=127.0.0.1:18888
     
+
+配置完成在虚拟环境安装完依赖，运行
+`uwsgi --ini uwsgi.ini`
+启动服务（也可以到宝塔python项目管理器启动）
+
+然后访问nginx配置的：server_name:listen 即可访问运行的项目
 
 遇到的问题：
 
