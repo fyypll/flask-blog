@@ -14,7 +14,8 @@
         </div>
     </div>
     <div class="post-body">
-        <p>{{post_info.body}}</p>
+        <!--        不转义富文本中的html标签-->
+        <p>{{post_info.body|safe}}</p>
     </div>
 </div>
 

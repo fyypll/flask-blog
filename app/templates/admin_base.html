@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="../static/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
     <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tinymce_setup.js') }}"></script>
     <link rel="stylesheet" href="../static/css/login.css" type="text/css"/>
     {% if title %}
     <title>{{ title }} - MAPLE博客</title>

@@ -299,6 +299,8 @@ article img {
 
 .post-index .article-wrap {
     margin: 24px;
+    max-height: 436px;
+    overflow: hidden;
 }
 
 .post-index .has-img-a {
@@ -916,6 +918,7 @@ ul.mobile .commlist-middle {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.entry-header{
-	margin-bottom: 16px;
+
+.entry-header {
+    margin-bottom: 16px;
 }

@@ -14,7 +14,7 @@
     </div>
     <div class="form-group">
         <label>{{ form.post_body.label }}</label>
-        {{ form.post_body(cols=100, rows=10, class="form-control") }}<br>
+        {{ form.post_body(cols=100, rows=10, class="form-control",id="post-content") }}<br>
         {% for error in form.post_body.errors %}
         <span class="text-danger">{{ error }}</span>
         {% endfor %}
