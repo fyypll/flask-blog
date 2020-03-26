@@ -164,17 +164,19 @@ label, button, input, select, textarea {
 /* header */
 .quotes {
     min-height: 50px;
-    width: 1000px;
-    position: relative;
-    margin: 0px auto 120px auto;
+    /*width: 100%;*/
+    /*position: relative;*/
+    margin-left: 13rem;
+    /*margin: 0px auto 120px auto;*/
     padding-top: 63px;
 }
 
 .quotes p {
     color: #fff;
-    width: 330px;
+    /*width: 330px;*/
+    width: 20rem;
     line-height: 26px;
-    text-indent: 2em;
+    text-indent: 2rem;
     text-align: justify;
 }
 
@@ -202,7 +204,8 @@ label, button, input, select, textarea {
 }
 
 #nav li {
-    width: initial;
+    /*width: initial;*/
+    width: 6rem;
     line-height: 30px;
     float: left;
 }
