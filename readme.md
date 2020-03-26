@@ -1,3 +1,7 @@
+mysql版本5.7
+
+python版本3.7.4
+
 创建数据库，格式为utf8mb4
 
 `create database flaskblog default character set utf8mb4 collate utf8mb4_unicode_ci;`
