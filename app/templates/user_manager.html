@@ -20,6 +20,7 @@
     <table class="table table-condensed table-bordered">
         <caption>用户管理</caption>
         <tr>
+            <th>最后活跃时间</th>
             <th>用户名</th>
             <th>编辑</th>
             <th>删除</th>
@@ -27,6 +28,7 @@
         <!-- 取出用户数据 -->
         {% for user in users %}
         <tr>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ user.last_seen }}</td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ user.username }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td><a href="{{ url_for('edit_user',user_id=user.id) }}">

@@ -20,6 +20,7 @@
     <table class="table table-condensed table-bordered">
         <caption>文章管理</caption>
         <tr>
+            <th>发文时间</th>
             <th>文章名</th>
             <th>编辑</th>
             <th>删除</th>
@@ -27,6 +28,7 @@
         <!-- 取出文章数据 -->
         {% for post in articles %}
         <tr>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ post.post_time }}</td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td><a href="{{ url_for('edit_post',post_id=post.id) }}">

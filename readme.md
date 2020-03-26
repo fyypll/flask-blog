@@ -1,3 +1,7 @@
+创建数据库，格式为utf8mb4
+
+`create database flaskblog default character set utf8mb4 collate utf8mb4_unicode_ci;`
+
 数据库配置文件在config.py文件
 
 配置完成数据库后，执行
@@ -13,6 +17,7 @@
 将更改同步到数据库中，此时，你就可以看到数据库中出现了相关的表了
 
 安装环境依赖
-`pip install -r requirements.txt
-`
+`pip install -r requirements.txt`
+
+
 

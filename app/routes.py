@@ -156,7 +156,7 @@ def post_manager():
     # 获取当前已登录用户id
     userId = current_user.id
     # 查询属于当前已登录用户的所有文章
-    posts = Post.query.filter_by(user_id=userId).all()
+    posts = Post.query.filter_by(user_id=userId).order_by(Post.post_time.desc()).all()
     # 每页显示多少文章
     per_page = 12
     # 总的有多少篇文章，使用len函数进行统计
