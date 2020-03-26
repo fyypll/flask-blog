@@ -11,3 +11,7 @@
 执行
 `flask db upgrade`
 将更改同步到数据库中，此时，你就可以看到数据库中出现了相关的表了
+
+安装环境依赖
+`pip install -r requirements.txt
+`
