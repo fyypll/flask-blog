@@ -26,3 +26,8 @@
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
+.post-edit a{
+    margin-left: 2rem;
+    color: #21bc9c;
+}

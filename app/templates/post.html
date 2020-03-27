@@ -14,7 +14,7 @@
         </div>
         {% if current_user.is_anonymous %}
         {% else %}
-        <div class="post-time">
+        <div class="post-edit">
             <a href="{{ url_for('edit_post',post_id=post_info.id) }}">编辑</a>
         </div>
         {% endif %}
