@@ -57,6 +57,11 @@ def login():
         login_user(user, remember=form.remember_me.data)
         # 此时的next_page记录的是跳转至登录页面时的地址
         next_page = request.args.get('next')
+
+        # 记录登录时间
+        current_user.last_seen = datetime.now()
+        db.session.commit()
+
         # 如果next_page记录的地址不存在那么就返回首页
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
@@ -100,15 +105,15 @@ def user(username):
     return render_template('user.html', title='个人中心', user=user)
 
 
-# 中户中心显示最后登录时间
-@app.before_request
-def before_request():
-    if current_user.is_authenticated:
-        # 系统世界标准时间
-        # current_user.last_seen = datetime.utcnow()
-        # 系统本地时间
-        current_user.last_seen = datetime.now()
-        db.session.commit()
+# # 中户中心显示最后登录时间
+# @app.before_request
+# def before_request():
+#     if current_user.is_authenticated:
+#         # 系统世界标准时间
+#         # current_user.last_seen = datetime.utcnow()
+#         # 系统本地时间
+#         current_user.last_seen = datetime.now()
+#         db.session.commit()
 
 
 # 编辑个人资料
@@ -179,7 +184,7 @@ def post_manager():
     return render_template('post_manager.html', title='我的文章', **context)
 
 
-# 用户文章管理
+# 用户文章管理(管理员)
 @app.route('/all_post_manager')
 @login_required
 def all_post_manager():
