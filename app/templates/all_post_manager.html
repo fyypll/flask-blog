@@ -1,0 +1,52 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<!--显示闪现的消息-->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ur>
+    {% for message in messages %}
+    <div class="alert alert-success" style="text-align: center">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ur>
+{% endif %}
+{% endwith %}
+
+<div class="table-responsive">
+    <table class="table table-condensed table-bordered">
+        <caption>用户文章管理</caption>
+        <tr>
+            <th>发文时间</th>
+            <th>文章名</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
+        <!-- 取出文章数据 -->
+        {% for post in articles %}
+        <tr>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ post.post_time }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
+            <!-- 将文章id通过get方式传过去 -->
+            <td><a href="{{ url_for('edit_post',post_id=post.id) }}">
+                <button class="btn btn-success" type="button">
+                    <span class="glyphicon glyphicon glyphicon glyphicon-pencil"></span>
+                    编辑
+                </button>
+            </a></td>
+            <td><a href="{{ url_for('dele_post',post_id=post.id) }}">
+                <button class="btn btn-danger" type="button">
+                    <span class="glyphicon glyphicon glyphicon-trash"></span>
+                    删除
+                </button>
+            </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <!--分页-->
+    {{pagination.links}}
+</div>
+{% endblock %}

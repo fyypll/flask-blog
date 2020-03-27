@@ -176,7 +176,40 @@ def post_manager():
         'pagination': pagination,
         'articles': articles
     }
-    return render_template('post_manager.html', title='文章管理', **context)
+    return render_template('post_manager.html', title='我的文章', **context)
+
+
+# 用户文章管理
+@app.route('/all_post_manager')
+@login_required
+def all_post_manager():
+    # 获取当前已登录用户id
+    userId = current_user.id
+    if userId == 1:
+        # 查询除了管理员以外的所有文章
+        posts = Post.query.filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
+        # 每页显示多少文章
+        per_page = 12
+        # 总的有多少篇文章，使用len函数进行统计
+        total = len(posts)
+        # 获取页码，默认为第一页(刚开始取不到页码数据，默认为1)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        # 每一页开始的位置
+        start = (page - 1) * per_page
+        # 每一页结束的位置
+        end = start + per_page
+        # 使用Pagination函数进行分页，使用bootstrap3模板
+        pagination = Pagination(bs_version=3, page=page, total=total)
+        # 对文章进行切片(每12篇切一次)
+        articles = posts[slice(start, end)]
+        # print(articles)
+        context = {
+            'pagination': pagination,
+            'articles': articles
+        }
+        return render_template('all_post_manager.html', title='用户文章管理', **context)
+    else:
+        return redirect(url_for('post_manager'))
 
 
 # 编辑文章
@@ -188,8 +221,8 @@ def edit_post():
     post_id = request.args.get('post_id')
     # 根据文章id查询文章数据
     post_info = Post.query.filter_by(id=post_id).first_or_404()
-    # 如果当前登录用户id是文章作者id，则允许对文章进行修改
-    if current_user.id == post_info.user_id:
+    # 如果当前登录用户id是文章作者id，或者是管理员，则允许对文章进行修改
+    if current_user.id == post_info.user_id or current_user.id == 1:
         # 是否是post请求且数据是是否有效
         if form.validate_on_submit():
             post_info.title = form.post_title.data

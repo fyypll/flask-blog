@@ -1,5 +1,6 @@
 import re
 
+from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
@@ -72,8 +73,9 @@ class EditProfileForm(FlaskForm):
     # 校验用户名
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
-        # 如果用户名在数据库已存在
-        if user is not None:
+        current_user.username
+        # 如果用户名在数据库已存在且不是修改前的用户名
+        if user is not None and user.username != current_user.username:
             raise ValidationError('用户名已存在，再想一个?')
         # 如果用户名是纯数字
         if username.data.isdigit():
@@ -106,12 +108,12 @@ class EditUserForm(FlaskForm):
     about_me = TextAreaField('签名', validators=[Length(min=0, max=140)])
     submit = SubmitField('更新')
 
-    # 校验邮箱
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        # 如果邮箱在数据库中已存在
-        if user is not None:
-            raise ValidationError('邮箱已存在，换一个?')
+    # # 校验邮箱
+    # def validate_email(self, email):
+    #     user = User.query.filter_by(email=email.data).first()
+    #     # 如果邮箱在数据库中已存在
+    #     if user is not None:
+    #         raise ValidationError('邮箱已存在，换一个?')
 
 
 # 评论表格
@@ -120,7 +122,6 @@ class SendLiuYanForm(FlaskForm):
     email = StringField('电子邮件', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
     body = TextAreaField('添加新评论', validators=[Length(min=10, max=10000)])
     submit = SubmitField('提交评论')
-
 
 # 富文本
 # class EditorForm(FlaskForm):
