@@ -208,6 +208,9 @@ label, button, input, select, textarea {
     width: 6rem;
     line-height: 30px;
     float: left;
+    /*不允许换行*/
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .sub-menu {
@@ -861,7 +864,7 @@ ul.mobile .commlist-middle {
     line-height: 58px;
 }
 
-#menu-item-1 {
+.nav_active {
     background: #06a2e4;
     border-radius: 50px 0;
 }
@@ -924,4 +927,9 @@ ul.mobile .commlist-middle {
 
 .entry-header {
     margin-bottom: 16px;
+}
+
+/*顶部图片*/
+#container2 {
+    background: #337ab7 url(../images/images/top.jpg) center 0 scroll no-repeat;
 }

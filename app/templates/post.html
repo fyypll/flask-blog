@@ -12,6 +12,12 @@
         <div class="post-time">
             发表于：{{post_info.post_time}}
         </div>
+        {% if current_user.is_anonymous %}
+        {% else %}
+        <div class="post-time">
+            <a href="{{ url_for('edit_post',post_id=post_info.id) }}">编辑</a>
+        </div>
+        {% endif %}
     </div>
     <div class="post-body">
         <!--        不转义富文本中的html标签-->
