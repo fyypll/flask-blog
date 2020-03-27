@@ -151,6 +151,7 @@ def send_post():
         db.session.add(post)
         db.session.commit()
         flash('文章已发布，快去看看吧!')
+        return redirect(url_for('post_manager'))
     return render_template('send_post.html', title='发文章', form=form)
 
 
