@@ -12,10 +12,14 @@ from datetime import datetime
 from flask_paginate import Pagination, get_page_parameter
 
 
-# 获取当前登录用户头像
+# 获取当前登录用户头像和用户名
 def getuser():
-    user = User.query.filter_by(username=current_user.username).first_or_404()
-    return user.avatar(128)
+    user_info = User.query.filter_by(username=current_user.username).first_or_404()
+    user = {
+        'avatar': user_info.avatar(128),
+        'username': user_info.username
+    }
+    return user
 
 
 # 首页
@@ -107,9 +111,9 @@ def register():
 # 添加装饰器@login_required，必须登录之后才能访问该route
 @login_required
 def user(username):
-    user_avatar = getuser()
+    users = getuser()
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', title='个人中心', user=user, user_avatar=user_avatar)
+    return render_template('user.html', title='个人中心', user=user, users=users)
 
 
 # # 中户中心显示最后登录时间
@@ -127,7 +131,7 @@ def user(username):
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    user_avatar = getuser()
+    users = getuser()
     form = EditProfileForm()
     # 是否是post请求且数据是是否有效
     if form.validate_on_submit():
@@ -139,7 +143,7 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='个人资料编辑', form=form, user_avatar=user_avatar)
+    return render_template('edit_profile.html', title='个人资料编辑', form=form, users=users)
 
 
 # 发表文章
@@ -147,7 +151,7 @@ def edit_profile():
 @login_required
 def send_post():
     form = SendPostForm()
-    user_avatar = getuser()
+    users = getuser()
     # 如果是post请求且数据格式正确
     if form.validate_on_submit():
         # 获取当前已登录用户id
@@ -161,14 +165,14 @@ def send_post():
         db.session.commit()
         flash('文章已发布，快去看看吧!')
         return redirect(url_for('post_manager'))
-    return render_template('send_post.html', title='发文章', form=form, user_avatar=user_avatar)
+    return render_template('send_post.html', title='发文章', form=form, users=users)
 
 
 # 文章管理
 @app.route('/post_manager')
 @login_required
 def post_manager():
-    user_avatar = getuser()
+    users = getuser()
     # 获取当前已登录用户id
     userId = current_user.id
     # 查询属于当前已登录用户的所有文章
@@ -192,14 +196,14 @@ def post_manager():
         'pagination': pagination,
         'articles': articles
     }
-    return render_template('post_manager.html', title='我的文章', **context, user_avatar=user_avatar)
+    return render_template('post_manager.html', title='我的文章', **context, users=users)
 
 
 # 用户文章管理(管理员)
 @app.route('/all_post_manager')
 @login_required
 def all_post_manager():
-    user_avatar = getuser()
+    users = getuser()
     # 获取当前已登录用户id
     userId = current_user.id
     if userId == 1:
@@ -224,7 +228,7 @@ def all_post_manager():
             'pagination': pagination,
             'articles': articles
         }
-        return render_template('all_post_manager.html', title='用户文章管理', **context, user_avatar=user_avatar)
+        return render_template('all_post_manager.html', title='用户文章管理', **context, users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -233,7 +237,7 @@ def all_post_manager():
 @app.route('/edit_post', methods=['GET', 'POST'])
 @login_required
 def edit_post():
-    user_avatar = getuser()
+    users = getuser()
     form = EditPostForm()
     # 获取编辑按钮传过来的文章id
     post_id = request.args.get('post_id')
@@ -256,7 +260,7 @@ def edit_post():
     else:
         flash('这篇文章不是你写的哦!')
         return redirect(url_for('post_manager'))
-    return render_template('edit_post.html', title='文章编辑', form=form, user_avatar=user_avatar)
+    return render_template('edit_post.html', title='文章编辑', form=form, users=users)
 
 
 # 删除文章
@@ -277,24 +281,24 @@ def dele_post(post_id):
 @app.route('/user_manager')
 @login_required
 def user_manager():
-    user_avatar = getuser()
+    users = getuser()
     # 获取当前已登录用户id
     userId = current_user.id
     if userId == 1:
         # 排除管理员，也就是id为1的用户
-        users = User.query.filter(User.id != 1).all()
+        users_info = User.query.filter(User.id != 1).all()
         per_page = 12
-        total = len(users)
+        total = len(users_info)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         start = (page - 1) * per_page
         end = start + per_page
         pagination = Pagination(bs_version=3, page=page, total=total)
-        usersData = users[slice(start, end)]
+        usersData = users_info[slice(start, end)]
         context = {
             'pagination': pagination,
-            'users': usersData
+            'users_info': usersData
         }
-        return render_template('user_manager.html', title='用户管理', **context, user_avatar=user_avatar)
+        return render_template('user_manager.html', title='用户管理', **context, users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -303,7 +307,7 @@ def user_manager():
 @app.route('/edit_user', methods=['GET', 'POST'])
 @login_required
 def edit_user():
-    user_avatar = getuser()
+    users = getuser()
     form = EditUserForm()
     user_id = request.args.get('user_id')
     user_info = User.query.filter(User.id == user_id).first_or_404()
@@ -320,7 +324,7 @@ def edit_user():
             form.username.data = user_info.username
             form.email.data = user_info.email
             form.about_me.data = user_info.about_me
-        return render_template('edit_user.html', title='编辑用户信息', form=form, user_avatar=user_avatar)
+        return render_template('edit_user.html', title='编辑用户信息', form=form, users=users)
     else:
         return redirect(url_for('post_manager'))
 

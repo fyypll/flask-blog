@@ -33,13 +33,11 @@
             <!-- 将文章id通过get方式传过去 -->
             <td><a href="{{ url_for('edit_post',post_id=post.id) }}">
                 <button class="btn btn-success" type="button">
-                    <span class="glyphicon glyphicon glyphicon glyphicon-pencil"></span>
                     编辑
                 </button>
             </a></td>
             <td><a href="{{ url_for('dele_post',post_id=post.id) }}">
                 <button class="btn btn-danger" type="button">
-                    <span class="glyphicon glyphicon glyphicon-trash"></span>
                     删除
                 </button>
             </a></td>
