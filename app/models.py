@@ -49,6 +49,7 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<body:{}>'.format(self.body)
+        # return '{}>'.format(self)
 
     # 定义一个to_json的方法，使用dict方法来返回类中的属性字典
     def to_json(self):

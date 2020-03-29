@@ -125,3 +125,8 @@
         padding: 10px 20px;
     }
 }
+
+/*文章管理按钮样式*/
+.post-del{
+    color: #fa8181;
+}

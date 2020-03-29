@@ -22,6 +22,13 @@ def getuser():
     return user
 
 
+# 获取文章时间，标题和文章作者信息
+# def getuserinfo():
+#     # 关联查询Post表和User表
+#     user_info = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(Post.user_id == User.id).all()
+#     return user_info
+
+
 # 首页
 @app.route('/')
 @app.route('/index', methods=['GET'])
@@ -208,7 +215,8 @@ def all_post_manager():
     userId = current_user.id
     if userId == 1:
         # 查询除了管理员以外的所有文章
-        posts = Post.query.filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
+        # posts = Post.query.filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
+        posts = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(Post.user_id == User.id).filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
         # 每页显示多少文章
         per_page = 12
         # 总的有多少篇文章，使用len函数进行统计
