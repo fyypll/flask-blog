@@ -215,8 +215,9 @@ def all_post_manager():
     userId = current_user.id
     if userId == 1:
         # 查询除了管理员以外的所有文章
-        # posts = Post.query.filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
-        posts = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(Post.user_id == User.id).filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
+        # filter可以多表联接查询，同时查询多张表信息一次性输出
+        posts = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(
+            Post.user_id == User.id).filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
         # 每页显示多少文章
         per_page = 12
         # 总的有多少篇文章，使用len函数进行统计
@@ -439,3 +440,83 @@ def post_info():
             db.session.commit()
             return redirect(url_for('post_info', post_id=post_id))
     return render_template('post.html', post_info=post_info, username=username, form=form, **context)
+
+
+# 评论管理
+@app.route('/comm_manager', methods=['GET'])
+@login_required
+def comm_manager():
+    users = getuser()
+    user_id = current_user.id
+    # 获取当前登录用户所属文章的所有评论,lable()设置字段别名，避免相同字段干扰
+    comm_info = db.session.query(Post.title, Post.id.label('postId'), Comments.id, Comments.username, Comments.body,
+                                 Comments.send_time,
+                                 Comments.email).filter(
+        Post.user_id == user_id).filter(
+        Comments.post_id == Post.id).order_by(Comments.send_time.desc()).all()
+    # 分页
+    per_page = 12
+    total = len(comm_info)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pagination = Pagination(bs_version=3, page=page, total=total)
+    # 对文章进行切片
+    comm = comm_info[slice(start, end)]
+    context = {
+        'pagination': pagination,
+        'comm_info': comm
+    }
+    return render_template('comm_manager.html', users=users, **context)
+
+
+# 删除评论
+@app.route('/comm_del', methods=['GET'])
+@login_required
+def comm_del():
+    comm_id = request.args.get('comm_id')
+    comm_info = Comments.query.filter_by(id=comm_id).first_or_404()
+    db.session.delete(comm_info)
+    db.session.commit()
+    flash('用户评论已成功删除!')
+    # 删除后返回评论管理页面
+    return redirect(url_for('comm_manager'))
+
+
+# 留言管理(管理员)
+@app.route('/liuyan_manager', methods=['GET'])
+@login_required
+def liuyan_manager():
+    users = getuser()
+    # 如果不是管理员
+    if current_user.id != 1:
+        return redirect(url_for('comm_manager'))
+    else:
+        liuyan_info = Liuyan.query.order_by(Liuyan.send_time.desc()).all()
+        # 分页
+        per_page = 12
+        total = len(liuyan_info)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        start = (page - 1) * per_page
+        end = start + per_page
+        pagination = Pagination(bs_version=3, page=page, total=total)
+        # 对文章进行切片
+        liuyan = liuyan_info[slice(start, end)]
+        context = {
+            'pagination': pagination,
+            'liuyan_info': liuyan
+        }
+    return render_template('liuyan_manager.html', users=users, **context)
+
+
+# 删除留言(管理员)
+@app.route('/liuyan_del', methods=['GET'])
+@login_required
+def liuyan_del():
+    liuyan_id = request.args.get('liuyan_id')
+    liuyan_info = Liuyan.query.filter_by(id=liuyan_id).first_or_404()
+    db.session.delete(liuyan_info)
+    db.session.commit()
+    flash('留言已成功删除!')
+    # 删除后返回评论管理页面
+    return redirect(url_for('liuyan_manager'))
