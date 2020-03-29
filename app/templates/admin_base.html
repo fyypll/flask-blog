@@ -38,10 +38,12 @@
                         <li class="nav-item">
                             <a href="#"><i class="mdi mdi-puzzle"></i> 发表说说</a>
                         </li>
-
+                        {% if current_user.id == 1 %}
                         <li class="nav-item">
-                            <a href="{{ url_for('user_manager') }}"><i class="mdi mdi-account-settings-variant"></i> 用户管理</a>
+                            <a href="{{ url_for('user_manager') }}"><i class="mdi mdi-account-settings-variant"></i>
+                                用户管理</a>
                         </li>
+                        {% endif %}
 
                         <li class="nav-item nav-item-has-subnav">
                             <a href="#"><i class="mdi mdi-information"></i> 我的资料</a>
@@ -55,7 +57,9 @@
                             <a href="#"><i class="mdi mdi-message-settings-variant"></i> 评论管理</a>
                             <ul class="nav nav-subnav">
                                 <li><a href="#">文章评论</a></li>
+                                {% if current_user.id == 1 %}
                                 <li><a href="#">留言板</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -63,7 +67,9 @@
                             <a href="#"><i class="mdi mdi-book-open-page-variant"></i> 文章管理</a>
                             <ul class="nav nav-subnav">
                                 <li><a href="{{ url_for('post_manager') }}">我的文章</a></li>
+                                {% if current_user.id == 1 %}
                                 <li><a href="{{ url_for('all_post_manager') }}">用户文章</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -103,10 +109,12 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
-                                    <a href="{{ url_for('user', username=current_user.username) }}"><i class="mdi mdi-account"></i> 个人信息</a>
+                                    <a href="{{ url_for('user', username=current_user.username) }}"><i
+                                            class="mdi mdi-account"></i> 个人信息</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('edit_profile') }}"><i class="mdi mdi-lock-outline"></i> 修改信息</a>
+                                    <a href="{{ url_for('edit_profile') }}"><i class="mdi mdi-lock-outline"></i>
+                                        修改信息</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
