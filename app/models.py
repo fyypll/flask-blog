@@ -46,6 +46,7 @@ class Post(db.Model):
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     post_time = db.Column(db.String(20))
+    comms = db.relationship('Comments', backref='comments', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return '<body:{}>'.format(self.body)
@@ -85,7 +86,7 @@ class Comments(db.Model):
     username = db.Column(db.String(64))
     body = db.Column(db.Text)
     email = db.Column(db.String(120))
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'))
     send_time = db.Column(db.String(20))
 
     def __repr__(self):
