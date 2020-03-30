@@ -27,7 +27,9 @@
         <!-- 取出文章数据 -->
         {% for post in articles %}
         <tr>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ post.title }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">
+                <a href="{{ url_for('post_info',post_id=post.id) }}">{{ post.title }}</a>
+            </td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.post_time }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td>

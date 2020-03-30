@@ -56,8 +56,9 @@
                         <li class="nav-item nav-item-has-subnav">
                             <a href="#"><i class="mdi mdi-message-settings-variant"></i> 评论管理</a>
                             <ul class="nav nav-subnav">
-                                <li><a href="{{ url_for('comm_manager') }}">文章评论</a></li>
+                                <li><a href="{{ url_for('comm_manager') }}">与我相关</a></li>
                                 {% if current_user.id == 1 %}
+                                <li><a href="{{ url_for('all_comm_manager') }}">所有评论</a></li>
                                 <li><a href="{{ url_for('liuyan_manager') }}">留言板</a></li>
                                 {% endif %}
                             </ul>

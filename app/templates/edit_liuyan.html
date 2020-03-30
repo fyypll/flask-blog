@@ -1,0 +1,32 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<h1>修改留言</h1>
+<form action="" method="post">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+        <label>{{ form.username.label }}</label>
+        {{ form.username(size=100, class="form-control") }}
+        {% for error in form.username.errors %}
+        <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="form-group">
+        <label>{{ form.email.label }}</label>
+        {{ form.email(cols=100, rows=10, class="form-control") }}<br>
+        {% for error in form.email.errors %}
+        <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="form-group">
+        <label>评论</label>
+        {{ form.body(cols=100, rows=10, class="form-control") }}<br>
+        {% for error in form.body.errors %}
+        <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <p>{{ form.submit(class="btn btn-primary") }}</p>
+</form>
+
+{% endblock %}

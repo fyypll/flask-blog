@@ -87,15 +87,8 @@ class EditProfileForm(FlaskForm):
             raise ValidationError('用户名长度不能大于15位哦!')
 
 
-# 发文章的表格
-class SendPostForm(FlaskForm):
-    post_title = StringField('标题', validators=[DataRequired()])
-    post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
-    submit = SubmitField('发表')
-
-
-# 编辑文章的表格
-class EditPostForm(FlaskForm):
+# 发表/编辑文章的表格
+class PostForm(FlaskForm):
     post_title = StringField('标题', validators=[DataRequired()])
     post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
     submit = SubmitField('发表')
@@ -116,14 +109,16 @@ class EditUserForm(FlaskForm):
     #         raise ValidationError('邮箱已存在，换一个?')
 
 
-# 评论表格
-class SendLiuYanForm(FlaskForm):
+# 评论/留言板/编辑评论留言的表格
+class LiuYanForm(FlaskForm):
     username = StringField('称呼', validators=[DataRequired()])
     email = StringField('电子邮件', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
-    body = TextAreaField('添加新评论', validators=[Length(min=10, max=10000)])
+    body = TextAreaField('添加新评论', validators=[DataRequired()])
     submit = SubmitField('提交评论')
 
-# 富文本
-# class EditorForm(FlaskForm):
-#     editor = TextAreaField('', id='content')
-#     submit = SubmitField('Submit')
+    # 评论长度判断
+    def validate_body(self, body):
+        if len(body.data) < 5:
+            raise ValidationError('评论长度不能小于5个字哦!')
+        if len(body.data) > 1000:
+            raise ValidationError('评论长度不能大于1000字哦!')

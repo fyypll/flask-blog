@@ -3,8 +3,8 @@ from sqlalchemy.sql import exists
 
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, SendPostForm, EditPostForm, EditUserForm, \
-    SendLiuYanForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EditUserForm, \
+    LiuYanForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post, Liuyan, Comments
 from werkzeug.urls import url_parse
@@ -157,7 +157,7 @@ def edit_profile():
 @app.route('/send_post', methods=['GET', 'POST'])
 @login_required
 def send_post():
-    form = SendPostForm()
+    form = PostForm()
     users = getuser()
     # 如果是post请求且数据格式正确
     if form.validate_on_submit():
@@ -247,7 +247,7 @@ def all_post_manager():
 @login_required
 def edit_post():
     users = getuser()
-    form = EditPostForm()
+    form = PostForm()
     # 获取编辑按钮传过来的文章id
     post_id = request.args.get('post_id')
     # 根据文章id查询文章数据
@@ -354,7 +354,7 @@ def dele_user():
 # 留言板
 @app.route('/liuyan', methods=['GET', 'POST'])
 def liuyan():
-    form = SendLiuYanForm()
+    form = LiuYanForm()
     liuyandata = []
     if request.method == 'GET':
         # 倒序排序，依据为时间
@@ -368,6 +368,13 @@ def liuyan():
         email = form.email.data
         body = form.body.data
         liuyan = Liuyan(username=username, email=email, body=body, send_time=send_time)
+        # 判断评论长度
+        if len(form.body.data) < 5:
+            flash('评论字数最低5字哦!')
+            return redirect(url_for('liuyan'))
+        elif len(form.body.data) > 1000:
+            flash('评论字数最多1000字哦!')
+            return redirect(url_for('liuyan'))
         # 如果发的评论在数据库表中已经存在
         if db.session.query(exists().where(Liuyan.body == body)).scalar():
             flash('不可发布重复评论')
@@ -395,7 +402,7 @@ def liuyan():
 # 文章详情页
 @app.route('/post_info', methods=['GET', 'POST'])
 def post_info():
-    form = SendLiuYanForm()
+    form = LiuYanForm()
     post_id = request.args.get('post_id')
     post_data = []
     # 根据文章id查询文章数据
@@ -431,6 +438,13 @@ def post_info():
         email = form.email.data
         body = form.body.data
         comments = Comments(username=username, email=email, body=body, send_time=send_time, post_id=post_id)
+        # 判断评论长度
+        if len(form.body.data) < 5:
+            flash('评论字数最低5字哦!')
+            return redirect(url_for('post_info', post_id=post_id))
+        elif len(form.body.data) > 1000:
+            flash('评论字数最多1000字哦!')
+            return redirect(url_for('post_info', post_id=post_id))
         # 如果发的评论在数据库表中已经存在
         if db.session.query(exists().where(Comments.body == body)).scalar():
             flash('不可发布重复评论')
@@ -520,3 +534,85 @@ def liuyan_del():
     flash('留言已成功删除!')
     # 删除后返回评论管理页面
     return redirect(url_for('liuyan_manager'))
+
+
+# 留言编辑(管理员)
+@app.route('/edit_liuyan', methods=['GET', 'POST'])
+@login_required
+def edit_liuyan():
+    users = getuser()
+    form = LiuYanForm()
+    liuyan_id = request.args.get('liuyan_id')
+    liuyan_info = Liuyan.query.filter_by(id=liuyan_id).first_or_404()
+    if current_user.id == 1:
+        if form.validate_on_submit():
+            liuyan_info.username = form.username.data
+            liuyan_info.email = form.email.data
+            liuyan_info.body = form.body.data
+            db.session.commit()
+            flash('留言已成功更新!')
+            return redirect(url_for('liuyan_manager'))
+        elif request.method == 'GET':
+            form.username.data = liuyan_info.username
+            form.email.data = liuyan_info.email
+            form.body.data = liuyan_info.body
+        return render_template('edit_liuyan.html', users=users, form=form)
+    else:
+        return redirect(url_for('comm_manager'))
+
+
+# 所有评论管理(管理员)
+@app.route('/all_comm_manager', methods=['GET'])
+@login_required
+def all_comm_manager():
+    users = getuser()
+    if current_user.id == 1:
+        comm_info = db.session.query(Post.title, Post.id.label('postId'), Comments.id, Comments.username,
+                                     Comments.email,
+                                     Comments.send_time, Comments.body).filter(Comments.post_id == Post.id).order_by(
+            Comments.send_time.desc()).all()
+        # 分页
+        per_page = 12
+        total = len(comm_info)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        start = (page - 1) * per_page
+        end = start + per_page
+        pagination = Pagination(bs_version=3, page=page, total=total)
+        # 对文章进行切片
+        comm = comm_info[slice(start, end)]
+        context = {
+            'pagination': pagination,
+            'comm_info': comm
+        }
+        return render_template('all_comm_manager.html', users=users, **context)
+    else:
+        return redirect(url_for('comm_manager'))
+
+
+# 评论编辑
+@app.route('/edit_comm', methods=['GET', 'POST'])
+@login_required
+def edit_comm():
+    users = getuser()
+    form = LiuYanForm()
+    comm_id = request.args.get('comm_id')
+    comm_info = Comments.query.filter_by(id=comm_id).first_or_404()
+    # 获取当前编辑的评论是不是这个作者的文章里面的评论
+    userId = db.session.query(Post.user_id).filter(Comments.id == comm_id).filter(Comments.post_id == Post.id).first_or_404()
+    # 如果用户编辑的这条评论是该用户所属文章中的评论
+    if current_user.id == userId.user_id:
+        if form.validate_on_submit():
+            comm_info.username = form.username.data
+            comm_info.email = form.email.data
+            comm_info.body = form.body.data
+            db.session.commit()
+            flash('评论已成功更新!')
+            return redirect(url_for('comm_manager'))
+        elif request.method == 'GET':
+            form.username.data = comm_info.username
+            form.email.data = comm_info.email
+            form.body.data = comm_info.body
+        return render_template('edit_comm.html', users=users, form=form)
+    else:
+        flash('你无权修改这条评论哦!')
+        return redirect(url_for('comm_manager'))
