@@ -68,74 +68,72 @@
    将程序上传到服务器，在`python项目管理器` 中安装好需要使用的 `python` 版本，然后点击添加项目，进行创建，然后选择你刚才上传的程序，选择 `python` 版本、框架选 `flask` 、启动方式选 `uwsgi` 、勾上 `安装模块依赖` （确保文件 `requirements.txt` 存在，否则无法安装依赖），然后确定即可开始部署，点击配置输入如下内容
 
     `wsgi` 配置（ `uwsgi.ini` 文件）
+	```
+	[uwsgi]
+	# chdir — 项目所在的目录
+	chdir=/www/wwwroot/maple
+	# virtualenv — 虚拟环境目录
+	virtualenv=/www/wwwroot/maple/maple_venv
+	# myblog:app（启动文件和flask实例化的变量名）
+	module=myblog:app
+	# 启动文件
+	wsgi-file=myblog.py
+	callable=app
+	# master进程管理其他进程，以上述配置例子，其中的uwsgi程都是master程的子程，如果kill master程，相于重启所有的uwsgi进程
+	master=true
+	# 进程量
+	processes=4 
+	# 线程量
+	threads=2
+	# 使程序在后台运行，并将日志打到指定的日志文件或者udp服器，日志文件自建
+	# daemonize=/var/log/uwsgi/test.log
+	# 其中socket是用uwsgi与nginx之通信的，所以两者要一致
+	socket=127.0.0.1:18888
+	```
 
+	点击启动即可开始运行项目
 
-   ```
-   [uwsgi]
-   # chdir — 项目所在的目录
-   chdir=/www/wwwroot/maple
-   # virtualenv — 虚拟环境目录
-   virtualenv=/www/wwwroot/maple/maple_venv
-   # myblog:app（启动文件和flask实例化的变量名）
-   module=myblog:app
-   # 启动文件
-   wsgi-file=myblog.py
-   callable=app
-   # master进程管理其他进程，以上述配置例子，其中的uwsgi程都是master程的子程，如果kill master程，相于重启所有的uwsgi进程
-   master=true
-   # 进程量
-   processes=4 
-   # 线程量
-   threads=2
-   # 使程序在后台运行，并将日志打到指定的日志文件或者udp服器，日志文件自建
-   # daemonize=/var/log/uwsgi/test.log
-   # 其中socket是用uwsgi与nginx之通信的，所以两者要一致
-   socket=127.0.0.1:18888
-   ```
+	然后访问 `nginx` 配置的：`server_name:listen` 即可访问运行的项目
 
-   点击启动即可开始运行项目
+	   
 
-   然后访问 `nginx` 配置的：`server_name:listen` 即可访问运行的项目
+	也可以在命令行手动启动项目，不过过程略微麻烦，首先需要进入虚拟环境，命令如下
 
-   
+	```shell
+source 项目路径/项目名_venv/bin/activate
+	```
 
-   也可以在命令行手动启动项目，不过过程略微麻烦，首先需要进入虚拟环境，命令如下
+	   比如我的就是
 
-   ```shell
-   source 项目路径/项目名_venv/bin/activate
-   ```
+	```shell
+source /www/wwwroot/maple/maple_venv/bin/activate
+	```
 
-   比如我的就是
+	   
 
-   ```shell
-   source /www/wwwroot/maple/maple_venv/bin/activate
-   ```
+	然后你会发现命令行最左边信息会出现一个虚拟环境名称
 
-   
+	没激活虚拟环境时是这样的
 
-   然后你会发现命令行最左边信息会出现一个虚拟环境名称
+	```shell
+[root@ecs-sn3-medium-2-linux-20191122221125 maple]#
+	```
 
-   比如没激活虚拟环境时是这样的
+	激活虚拟环境后是这样的
 
-   ```shell
-   [root@ecs-sn3-medium-2-linux-20191122221125 maple]#
-   ```
-
-   激活虚拟环境后是这样的
-
-   ```shell
-   (maple_venv) [root@ecs-sn3-medium-2-linux-20191122221125 maple]#
-   ```
-
-   
-
-   激活虚拟环境后运行如下命令启动服务
-
-   ```shell
-   uwsgi --ini uwsgi.ini
-   ```
-
-
+	```shell
+	(maple_venv) [root@ecs-sn3-medium-2-linux-20191122221125 maple]#
+	```
+	
+	   
+	
+	激活虚拟环境后运行如下命令启动服务
+	
+	```shell
+	uwsgi --ini uwsgi.ini
+	```
+	
+	
 
 3. ##### 遇到的问题
 
