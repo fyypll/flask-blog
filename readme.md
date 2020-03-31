@@ -13,20 +13,18 @@
    ```
 
    数据库相关配置信息可在 `config.py` 文件中修改
-
+   
    
 
-   配置完成数据库后，执行
+   创建并进入python虚拟环境，安装环境依赖
 
    ```shell
-   flask db init
+   pip install -r requirements.txt
    ```
-
-   会生成 `migrations` 文件夹与相关文件(若该文件夹已存在则需先删除)
 
    
 
-   执行如下命令将数据库结构更新
+   执行如下命令完成数据库迁移
 
    ```shell
    flask db migrate -m '提交信息'
@@ -38,14 +36,6 @@
 
    ```shell
    flask db upgrade
-   ```
-
-   
-
-   程序安装环境依赖
-
-   ```shell
-   pip install -r requirements.txt
    ```
 
    
