@@ -10,7 +10,7 @@
             作者：{{username}}
         </div>
         <div class="post-time">
-            发表于：{{post_info.post_time}}
+            发表于：{{post_info.post_time|time_filter}}
         </div>
         {% if current_user.is_anonymous %}
         {% else %}

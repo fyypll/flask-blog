@@ -36,7 +36,7 @@
 <div class="ly-info">
     <div class="ly-main">
         <div class="ly-user">{{ly.username}}</div>
-        <div class="ly-time">{{ly.send_time}}</div>
+        <div class="ly-time">{{ly.send_time|time_filter}}</div>
     </div>
     <div class="ly-body">{{ly.body}}</div>
 </div>

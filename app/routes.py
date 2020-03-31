@@ -29,6 +29,31 @@ def getuser():
 #     return user_info
 
 
+# 时间过滤器
+@app.template_filter('time_filter')
+def time_filter(time):
+    if isinstance(time, datetime):
+        now = datetime.now()
+        # 两个时间相减，得到描述
+        print(time)
+        timestamp = (now - time).total_seconds()
+        if timestamp < 60:
+            return '刚刚'
+        elif timestamp < 60 * 60 and timestamp >= 60:
+            minutes = timestamp / 60
+            return "%s 分钟前" % int(minutes)
+        elif timestamp >= 60 * 60 and timestamp < 60 * 60 * 24:
+            hours = timestamp / (60 * 60)
+            return "%s 小时前" % int(hours)
+        elif timestamp >= 60 * 60 * 24 and timestamp < 60 * 60 * 24 * 30:
+            days = timestamp / (60 * 60 * 24)
+            return "%s 天前" % int(days)
+        else:
+            return time.strftime('%Y/%m/%d %H:%M')
+    else:
+        return time
+
+
 # 首页
 @app.route('/')
 @app.route('/index', methods=['GET'])
@@ -164,7 +189,7 @@ def send_post():
         # 获取当前已登录用户id
         userId = current_user.id
         # 获取提交文章时间
-        sendTime = datetime.now().strftime("%Y-%m-%d %H:%M")
+        sendTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 将数据放到post
         post = Post(title=form.post_title.data, body=form.post_body.data, user_id=userId, post_time=sendTime)
         # 将post提交到数据库
@@ -363,7 +388,7 @@ def liuyan():
             # 使用类中的to_json函数进行处理
             liuyandata.append(ly.to_json())
     else:
-        send_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        send_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         username = form.username.data
         email = form.email.data
         body = form.body.data
@@ -433,7 +458,7 @@ def post_info():
             'liuyandata': comments
         }
     else:
-        send_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        send_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         username = form.username.data
         email = form.email.data
         body = form.body.data
@@ -598,7 +623,8 @@ def edit_comm():
     comm_id = request.args.get('comm_id')
     comm_info = Comments.query.filter_by(id=comm_id).first_or_404()
     # 获取当前编辑的评论是不是这个作者的文章里面的评论
-    userId = db.session.query(Post.user_id).filter(Comments.id == comm_id).filter(Comments.post_id == Post.id).first_or_404()
+    userId = db.session.query(Post.user_id).filter(Comments.id == comm_id).filter(
+        Comments.post_id == Post.id).first_or_404()
     # 如果用户编辑的这条评论是该用户所属文章中的评论
     if current_user.id == userId.user_id:
         if form.validate_on_submit():

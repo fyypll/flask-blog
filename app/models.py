@@ -45,7 +45,7 @@ class Post(db.Model):
     title = db.Column(db.String(140))
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
-    post_time = db.Column(db.String(20))
+    post_time = db.Column(db.DateTime, default=datetime.now)
     comms = db.relationship('Comments', backref='comments', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
@@ -67,7 +67,7 @@ class Liuyan(db.Model):
     username = db.Column(db.String(64))
     body = db.Column(db.Text)
     email = db.Column(db.String(120))
-    send_time = db.Column(db.String(20))
+    send_time = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return '<body:{}>'.format(self.body)
@@ -87,7 +87,7 @@ class Comments(db.Model):
     body = db.Column(db.Text)
     email = db.Column(db.String(120))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'))
-    send_time = db.Column(db.String(20))
+    send_time = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return '<body:{}>'.format(self.body)

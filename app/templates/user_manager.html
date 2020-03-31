@@ -28,7 +28,7 @@
         {% for user in users_info %}
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">{{ user.username }}</td>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ user.last_seen }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ user.last_seen|time_filter }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td>
                 <a href="{{ url_for('edit_user',user_id=user.id) }}" data-toggle="tooltip" data-placement="top" title=""
