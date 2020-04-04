@@ -54,27 +54,40 @@ def time_filter(time):
         return time
 
 
+# 封装分页功能
+# 参数：1.每页显示文章数 2.要切片(分页)的数据 3.进行json处理吗,字符串yes或者no
+# 注意：to_json函数需要在表模型中设置过，方可使用
+def fenye(per_page, datas, isjson):
+    # 获取页码，若失败则取默认值1
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    total = len(datas)
+    start = (page - 1) * per_page
+    end = start + per_page
+    # 分页模板使用的Boostrap版本，页码，总文章数，每页多少篇文章
+    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page)
+    # 对数据进行切片(每per_page篇切一次)
+    data_info = datas[slice(start, end)]
+    final_data = []
+    if isjson == 'json':
+        # 将切片后的数据进行json化处理
+        for data in data_info:
+            # 使用类中的to_json函数进行处理
+            final_data.append(data.to_json())
+        return pagination, final_data
+    elif isjson == 'nojson':
+        return pagination, data_info
+
+
 # 首页
 @app.route('/')
 @app.route('/index', methods=['GET'])
 def index():
     # 获取页码，若失败则取默认值1
-    page = request.args.get(get_page_parameter(), type=int, default=1)
+    # page = request.args.get(get_page_parameter(), type=int, default=1)
     posts = Post.query.order_by(Post.post_time.desc()).all()
-    # 每页显示多少文章
-    per_page = 12
-    total = len(posts)
-    start = (page - 1) * per_page
-    end = start + per_page
-    pagination = Pagination(page=page, total=total)
-    # 对文章进行切片(每12篇切一次)
-    articles = posts[slice(start, end)]
-    posts = []
-    # 将切片后的数据进行json化处理
-    for postdata in articles:
-        # 使用类中的to_json函数进行处理
-        posts.append(postdata.to_json())
-    return render_template('index.html', pagination=pagination, posts=posts)
+    # 分页
+    (pagination, postdata) = fenye(12, posts, 'json')
+    return render_template('index.html', pagination=pagination, posts=postdata)
 
 
 # 登录
@@ -209,26 +222,9 @@ def post_manager():
     userId = current_user.id
     # 查询属于当前已登录用户的所有文章
     posts = Post.query.filter_by(user_id=userId).order_by(Post.post_time.desc()).all()
-    # 每页显示多少文章
-    per_page = 12
-    # 总的有多少篇文章，使用len函数进行统计
-    total = len(posts)
-    # 获取页码，默认为第一页(刚开始取不到页码数据，默认为1)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    # 每一页开始的位置
-    start = (page - 1) * per_page
-    # 每一页结束的位置
-    end = start + per_page
-    # 使用Pagination函数进行分页，使用bootstrap3模板
-    pagination = Pagination(bs_version=3, page=page, total=total)
-    # 对文章进行切片(每12篇切一次)
-    articles = posts[slice(start, end)]
-    # print(articles)
-    context = {
-        'pagination': pagination,
-        'articles': articles
-    }
-    return render_template('post_manager.html', title='我的文章', **context, users=users)
+    # 分页
+    (pagination, postdata) = fenye(12, posts, 'json')
+    return render_template('post_manager.html', title='我的文章', articles=postdata, pagination=pagination, users=users)
 
 
 # 用户文章管理(管理员)
@@ -243,26 +239,10 @@ def all_post_manager():
         # filter可以多表联接查询，同时查询多张表信息一次性输出
         posts = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(
             Post.user_id == User.id).filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
-        # 每页显示多少文章
-        per_page = 12
-        # 总的有多少篇文章，使用len函数进行统计
-        total = len(posts)
-        # 获取页码，默认为第一页(刚开始取不到页码数据，默认为1)
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        # 每一页开始的位置
-        start = (page - 1) * per_page
-        # 每一页结束的位置
-        end = start + per_page
-        # 使用Pagination函数进行分页，使用bootstrap3模板
-        pagination = Pagination(bs_version=3, page=page, total=total)
-        # 对文章进行切片(每12篇切一次)
-        articles = posts[slice(start, end)]
-        # print(articles)
-        context = {
-            'pagination': pagination,
-            'articles': articles
-        }
-        return render_template('all_post_manager.html', title='用户文章管理', **context, users=users)
+        # 分页
+        (pagination, postdata) = fenye(12, posts, 'nojson')
+        return render_template('all_post_manager.html', title='用户文章管理', articles=postdata, pagination=pagination,
+                               users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -321,18 +301,9 @@ def user_manager():
     if userId == 1:
         # 排除管理员，也就是id为1的用户
         users_info = User.query.filter(User.id != 1).all()
-        per_page = 12
-        total = len(users_info)
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        start = (page - 1) * per_page
-        end = start + per_page
-        pagination = Pagination(bs_version=3, page=page, total=total)
-        usersData = users_info[slice(start, end)]
-        context = {
-            'pagination': pagination,
-            'users_info': usersData
-        }
-        return render_template('user_manager.html', title='用户管理', **context, users=users)
+        # 分页
+        (pagination, users_info) = fenye(12, users_info, 'nojson')
+        return render_template('user_manager.html', title='用户管理', pagination=pagination, users_info=users_info, users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -409,19 +380,8 @@ def liuyan():
             db.session.commit()
             return redirect(url_for('liuyan'))
     # 分页
-    per_page = 12
-    total = len(liuyandata)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    start = (page - 1) * per_page
-    end = start + per_page
-    pagination = Pagination(page=page, total=total)
-    # 对文章进行切片
-    liu = liuyandata[slice(start, end)]
-    context = {
-        'pagination': pagination,
-        'liuyandata': liu
-    }
-    return render_template('liuyan.html', form=form, **context)
+    (pagination, liuyandata) = fenye(12, liuyandata, 'nojson')
+    return render_template('liuyan.html', form=form, pagination=pagination, liuyandata=liuyandata)
 
 
 # 文章详情页
@@ -439,24 +399,9 @@ def post_info():
 
     if request.method == 'GET':
         # 文章评论
-        commentsData = []
         comments_info = Comments.query.filter_by(post_id=post_id).order_by(Comments.send_time.desc()).all()
-        for cm_inf in comments_info:
-            # 使用类中的to_json函数进行处理
-            commentsData.append(cm_inf.to_json())
-        # 分页
-        per_page = 12
-        total = len(commentsData)
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        start = (page - 1) * per_page
-        end = start + per_page
-        pagination = Pagination(page=page, total=total)
-        # 对文章进行切片
-        comments = commentsData[slice(start, end)]
-        context = {
-            'pagination': pagination,
-            'liuyandata': comments
-        }
+        # 评论分页
+        (pagination, liuyandata) = fenye(12, comments_info, 'json')
     else:
         send_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         username = form.username.data
@@ -478,7 +423,7 @@ def post_info():
             db.session.add(comments)
             db.session.commit()
             return redirect(url_for('post_info', post_id=post_id))
-    return render_template('post.html', post_info=post_info, username=username, form=form, **context)
+    return render_template('post.html', post_info=post_info, username=username, form=form, pagination=pagination, liuyandata=liuyandata)
 
 
 # 评论管理
@@ -494,19 +439,8 @@ def comm_manager():
         Post.user_id == user_id).filter(
         Comments.post_id == Post.id).order_by(Comments.send_time.desc()).all()
     # 分页
-    per_page = 12
-    total = len(comm_info)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    start = (page - 1) * per_page
-    end = start + per_page
-    pagination = Pagination(bs_version=3, page=page, total=total)
-    # 对文章进行切片
-    comm = comm_info[slice(start, end)]
-    context = {
-        'pagination': pagination,
-        'comm_info': comm
-    }
-    return render_template('comm_manager.html', users=users, **context)
+    (pagination, comm_info) = fenye(12, comm_info, 'nojson')
+    return render_template('comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
 
 
 # 删除评论
@@ -533,19 +467,8 @@ def liuyan_manager():
     else:
         liuyan_info = Liuyan.query.order_by(Liuyan.send_time.desc()).all()
         # 分页
-        per_page = 12
-        total = len(liuyan_info)
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        start = (page - 1) * per_page
-        end = start + per_page
-        pagination = Pagination(bs_version=3, page=page, total=total)
-        # 对文章进行切片
-        liuyan = liuyan_info[slice(start, end)]
-        context = {
-            'pagination': pagination,
-            'liuyan_info': liuyan
-        }
-    return render_template('liuyan_manager.html', users=users, **context)
+        (pagination, liuyan_info) = fenye(12, liuyan_info, 'nojson')
+    return render_template('liuyan_manager.html', users=users, pagination=pagination, liuyan_info=liuyan_info)
 
 
 # 删除留言(管理员)
@@ -597,19 +520,8 @@ def all_comm_manager():
                                      Comments.send_time, Comments.body).filter(Comments.post_id == Post.id).order_by(
             Comments.send_time.desc()).all()
         # 分页
-        per_page = 12
-        total = len(comm_info)
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        start = (page - 1) * per_page
-        end = start + per_page
-        pagination = Pagination(bs_version=3, page=page, total=total)
-        # 对文章进行切片
-        comm = comm_info[slice(start, end)]
-        context = {
-            'pagination': pagination,
-            'comm_info': comm
-        }
-        return render_template('all_comm_manager.html', users=users, **context)
+        (pagination, comm_info) = fenye(12, comm_info, 'nojson')
+        return render_template('all_comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
     else:
         return redirect(url_for('comm_manager'))
 
