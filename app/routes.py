@@ -76,6 +76,7 @@ def fenye(per_page, datas, isjson):
         return pagination, final_data
     elif isjson == 'nojson':
         return pagination, data_info
+    return '最后一个参数只能是json或者nojson哦'
 
 
 # 首页
@@ -303,7 +304,8 @@ def user_manager():
         users_info = User.query.filter(User.id != 1).all()
         # 分页
         (pagination, users_info) = fenye(12, users_info, 'nojson')
-        return render_template('user_manager.html', title='用户管理', pagination=pagination, users_info=users_info, users=users)
+        return render_template('user_manager.html', title='用户管理', pagination=pagination, users_info=users_info,
+                               users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -423,7 +425,8 @@ def post_info():
             db.session.add(comments)
             db.session.commit()
             return redirect(url_for('post_info', post_id=post_id))
-    return render_template('post.html', post_info=post_info, username=username, form=form, pagination=pagination, liuyandata=liuyandata)
+    return render_template('post.html', post_info=post_info, username=username, form=form, pagination=pagination,
+                           liuyandata=liuyandata)
 
 
 # 评论管理
@@ -554,3 +557,14 @@ def edit_comm():
     else:
         flash('你无权修改这条评论哦!')
         return redirect(url_for('comm_manager'))
+
+
+# 用户个人博客首页
+@app.route('/<username>')
+def user_index(username):
+    user = User.query.filter(User.username == username).first_or_404()
+    userId = user.id
+    posts = Post.query.filter(Post.user_id == userId).order_by(Post.post_time.desc()).all()
+    # 分页
+    (pagination, postdata) = fenye(12, posts, 'json')
+    return render_template('user_index.html', pagination=pagination, postdata=postdata)

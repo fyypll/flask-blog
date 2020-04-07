@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="content" class="post-index">
+    {% for post in postdata %}
+    <article id="post-103" class="ptype-post">
+        <div class="article-wrap">
+            <header class="entry-header">
+                <h1>
+                    <a href="{{ url_for('post_info',post_id=post.id) }}" class="post-title" title="{{post.title}}">{{post.title}}</a>
+                    <span class="meta-time">{{post.post_time}}</span>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <a href="#" class="post-feature"><img src="../static/images/picture/01.jpg"></a>
+                <p>{{post.body|safe}}</p>
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{{pagination.links}}
+{% endblock %}
