@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify, json
+import requests
 from sqlalchemy.sql import exists
 
 from app import app, db
@@ -88,7 +89,7 @@ def index():
     posts = Post.query.order_by(Post.post_time.desc()).all()
     # 分页
     (pagination, postdata) = fenye(12, posts, 'json')
-    return render_template('index.html', pagination=pagination, posts=postdata)
+    return render_template('front/index.html', pagination=pagination, posts=postdata)
 
 
 # 登录
@@ -159,7 +160,7 @@ def register():
 def user(username):
     users = getuser()
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', title='个人中心', user=user, users=users)
+    return render_template('admin/user.html', title='个人中心', user=user, users=users)
 
 
 # # 中户中心显示最后登录时间
@@ -189,7 +190,7 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='个人资料编辑', form=form, users=users)
+    return render_template('admin/edit_profile.html', title='个人资料编辑', form=form, users=users)
 
 
 # 发表文章
@@ -211,7 +212,7 @@ def send_post():
         db.session.commit()
         flash('文章已发布，快去看看吧!')
         return redirect(url_for('post_manager'))
-    return render_template('send_post.html', title='发文章', form=form, users=users)
+    return render_template('admin/send_post.html', title='发文章', form=form, users=users)
 
 
 # 文章管理
@@ -225,7 +226,7 @@ def post_manager():
     posts = Post.query.filter_by(user_id=userId).order_by(Post.post_time.desc()).all()
     # 分页
     (pagination, postdata) = fenye(12, posts, 'json')
-    return render_template('post_manager.html', title='我的文章', articles=postdata, pagination=pagination, users=users)
+    return render_template('admin/post_manager.html', title='我的文章', articles=postdata, pagination=pagination, users=users)
 
 
 # 用户文章管理(管理员)
@@ -242,10 +243,10 @@ def all_post_manager():
             Post.user_id == User.id).filter(Post.user_id != 1).order_by(Post.post_time.desc()).all()
         # 分页
         (pagination, postdata) = fenye(12, posts, 'nojson')
-        return render_template('all_post_manager.html', title='用户文章管理', articles=postdata, pagination=pagination,
+        return render_template('admin/all_post_manager.html', title='用户文章管理', articles=postdata, pagination=pagination,
                                users=users)
     else:
-        return redirect(url_for('post_manager'))
+        return redirect(url_for('admin/post_manager'))
 
 
 # 编辑文章
@@ -275,7 +276,7 @@ def edit_post():
     else:
         flash('这篇文章不是你写的哦!')
         return redirect(url_for('post_manager'))
-    return render_template('edit_post.html', title='文章编辑', form=form, users=users)
+    return render_template('admin/edit_post.html', title='文章编辑', form=form, users=users)
 
 
 # 删除文章
@@ -304,7 +305,7 @@ def user_manager():
         users_info = User.query.filter(User.id != 1).all()
         # 分页
         (pagination, users_info) = fenye(12, users_info, 'nojson')
-        return render_template('user_manager.html', title='用户管理', pagination=pagination, users_info=users_info,
+        return render_template('admin/user_manager.html', title='用户管理', pagination=pagination, users_info=users_info,
                                users=users)
     else:
         return redirect(url_for('post_manager'))
@@ -331,7 +332,7 @@ def edit_user():
             form.username.data = user_info.username
             form.email.data = user_info.email
             form.about_me.data = user_info.about_me
-        return render_template('edit_user.html', title='编辑用户信息', form=form, users=users)
+        return render_template('admin/edit_user.html', title='编辑用户信息', form=form, users=users)
     else:
         return redirect(url_for('post_manager'))
 
@@ -383,7 +384,7 @@ def liuyan():
             return redirect(url_for('liuyan'))
     # 分页
     (pagination, liuyandata) = fenye(12, liuyandata, 'nojson')
-    return render_template('liuyan.html', form=form, pagination=pagination, liuyandata=liuyandata)
+    return render_template('front/liuyan.html', form=form, pagination=pagination, liuyandata=liuyandata)
 
 
 # 文章详情页
@@ -425,7 +426,7 @@ def post_info():
             db.session.add(comments)
             db.session.commit()
             return redirect(url_for('post_info', post_id=post_id))
-    return render_template('post.html', post_info=post_info, username=username, form=form, pagination=pagination,
+    return render_template('front/post.html', post_info=post_info, username=username, form=form, pagination=pagination,
                            liuyandata=liuyandata)
 
 
@@ -443,7 +444,7 @@ def comm_manager():
         Comments.post_id == Post.id).order_by(Comments.send_time.desc()).all()
     # 分页
     (pagination, comm_info) = fenye(12, comm_info, 'nojson')
-    return render_template('comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
+    return render_template('admin/comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
 
 
 # 删除评论
@@ -471,7 +472,7 @@ def liuyan_manager():
         liuyan_info = Liuyan.query.order_by(Liuyan.send_time.desc()).all()
         # 分页
         (pagination, liuyan_info) = fenye(12, liuyan_info, 'nojson')
-    return render_template('liuyan_manager.html', users=users, pagination=pagination, liuyan_info=liuyan_info)
+    return render_template('admin/liuyan_manager.html', users=users, pagination=pagination, liuyan_info=liuyan_info)
 
 
 # 删除留言(管理员)
@@ -507,7 +508,7 @@ def edit_liuyan():
             form.username.data = liuyan_info.username
             form.email.data = liuyan_info.email
             form.body.data = liuyan_info.body
-        return render_template('edit_liuyan.html', users=users, form=form)
+        return render_template('admin/edit_liuyan.html', users=users, form=form)
     else:
         return redirect(url_for('comm_manager'))
 
@@ -524,7 +525,7 @@ def all_comm_manager():
             Comments.send_time.desc()).all()
         # 分页
         (pagination, comm_info) = fenye(12, comm_info, 'nojson')
-        return render_template('all_comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
+        return render_template('admin/all_comm_manager.html', users=users, pagination=pagination, comm_info=comm_info)
     else:
         return redirect(url_for('comm_manager'))
 
@@ -553,7 +554,7 @@ def edit_comm():
             form.username.data = comm_info.username
             form.email.data = comm_info.email
             form.body.data = comm_info.body
-        return render_template('edit_comm.html', users=users, form=form)
+        return render_template('admin/edit_comm.html', users=users, form=form)
     else:
         flash('你无权修改这条评论哦!')
         return redirect(url_for('comm_manager'))
@@ -567,4 +568,4 @@ def user_index(username):
     posts = Post.query.filter(Post.user_id == userId).order_by(Post.post_time.desc()).all()
     # 分页
     (pagination, postdata) = fenye(12, posts, 'json')
-    return render_template('user_index.html', pagination=pagination, postdata=postdata)
+    return render_template('front/user_index.html', pagination=pagination, postdata=postdata)

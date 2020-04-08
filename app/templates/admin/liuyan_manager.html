@@ -1,4 +1,4 @@
-{% extends "admin_base.html" %}
+{% extends "admin/admin_base.html" %}
 
 {% block content %}
 
@@ -18,9 +18,8 @@
 
 <div class="table-responsive">
     <table class="table table-condensed table-bordered">
-        <caption>评论管理</caption>
+        <caption>留言管理</caption>
         <tr>
-            <th>文章</th>
             <th>评论</th>
             <th>评论者</th>
             <th>邮箱</th>
@@ -28,22 +27,21 @@
             <th>操作</th>
         </tr>
         <!-- 取出用户数据 -->
-        {% for comm in comm_info %}
+        {% for liuyan in liuyan_info %}
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">
-                <a href="{{ url_for('post_info',post_id=comm.postId) }}">{{ comm.title }}</a>
+                <a href="{{ url_for('liuyan') }}">{{ liuyan.body }}</a>
             </td>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ comm.body }}</td>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ comm.username }}</td>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ comm.email }}</td>
-            <td style="display:table-cell; vertical-align:middle!important;">{{ comm.send_time }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ liuyan.username }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ liuyan.email }}</td>
+            <td style="display:table-cell; vertical-align:middle!important;">{{ liuyan.send_time }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td>
-                <a href="{{ url_for('edit_comm',comm_id=comm.id) }}" data-toggle="tooltip" data-placement="top" title=""
+                <a href="{{ url_for('edit_liuyan',liuyan_id=liuyan.id) }}" data-toggle="tooltip" data-placement="top" title=""
                    data-original-title="修改">
                     <i class="mdi mdi-24px mdi-pencil-circle"></i>
                 </a>
-                <a class="post-del" href="{{ url_for('comm_del',comm_id=comm.id) }}" data-toggle="tooltip"
+                <a class="post-del" href="{{ url_for('liuyan_del',liuyan_id=liuyan.id) }}" data-toggle="tooltip"
                    data-placement="top" title=""
                    data-original-title="删除">
                     <i class="mdi mdi-24px mdi-delete-circle"></i>

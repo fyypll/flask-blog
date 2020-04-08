@@ -5,13 +5,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <title>首页 - MAPLE后台管理系统</title>
-    <link rel="icon" href="../static/favicon.ico" type="image/ico"/>
+    <link rel="icon" href="../../static/favicon.ico" type="image/ico"/>
     <meta name="keywords" content="枫雨,MAPLE后台管理系统"/>
     <meta name="description" content="MAPLE后台管理系统"/>
-    <link href="../static/admin/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="../static/admin/css/materialdesignicons.min.css" rel="stylesheet"/>
-    <link href="../static/admin/css/style.min.css" rel="stylesheet"/>
-    <link href="../static/css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="../../static/admin/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../static/admin/css/materialdesignicons.min.css" rel="stylesheet"/>
+    <link href="../../static/admin/css/style.min.css" rel="stylesheet"/>
+    <link href="../../static/css/login.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
         <aside class="lyear-layout-sidebar">
             <!-- logo -->
             <div id="logo" class="sidebar-header">
-                <a href="{{ url_for('index') }}"><img src="../static/admin/images/logo-sidebar.png" title="LightYear"
+                <a href="{{ url_for('index') }}"><img src="../../static/admin/images/logo-sidebar.png" title="LightYear"
                                                       alt="LightYear"/></a>
             </div>
             <div class="lyear-layout-sidebar-scroll">
@@ -36,7 +36,7 @@
                             <!-- 因此得到的地址是http://192.168.0.109:5000/user/fyypll这种样的 -->
                             <!-- 否则会变成http://192.168.0.109:5000/user?username=fyypll -->
                             <a href="{{ url_for('user_index', username=current_user.username) }}">
-                                <i class="mdi mdi-home"></i> 我的首页</a>
+                                <i class="mdi mdi-home-circle"></i> 我的首页</a>
                         </li>
 
                         <li class="nav-item">
@@ -148,10 +148,10 @@
     </div>
 </div>
 
-<script type="text/javascript" src="../static/admin/js/jquery.min.js"></script>
-<script type="text/javascript" src="../static/admin/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../static/admin/js/perfect-scrollbar.min.js"></script>
-<script type="text/javascript" src="../static/admin/js/main.min.js"></script>
+<script type="text/javascript" src="../../static/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/admin/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/admin/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../../static/admin/js/main.min.js"></script>
 <!--富文本-->
 <script src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tinymce_setup.js') }}"></script>

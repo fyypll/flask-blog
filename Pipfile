@@ -25,6 +25,7 @@ flask = "*"
 flask-paginate = "*"
 Flask-SQLAlchemy = "==2.4.1"
 SQLAlchemy = "==1.3.15"
+requests = "*"
 
 [requires]
 python_version = "3.7"
