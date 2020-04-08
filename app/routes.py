@@ -36,7 +36,7 @@ def time_filter(time):
     if isinstance(time, datetime):
         now = datetime.now()
         # 两个时间相减，得到描述
-        print(time)
+        # print(time)
         timestamp = (now - time).total_seconds()
         if timestamp < 60:
             return '刚刚'
