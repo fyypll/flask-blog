@@ -4,6 +4,8 @@ from sqlalchemy.sql import exists
 
 from app import app, db
 # 导入各个表单处理方法(form.py文件)
+from app.blueprints.LogOrReg import LogOrReg_bp
+from app.blueprints.home import home_bp
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EditUserForm, \
     LiuYanForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -11,147 +13,11 @@ from app.models import User, Post, Liuyan, Comments
 from werkzeug.urls import url_parse
 from datetime import datetime
 from flask_paginate import Pagination, get_page_parameter
+from app.publlic_fun.publlic_fun import getuser, fenye
 
 
-# 获取当前登录用户头像和用户名
-def getuser():
-    user_info = User.query.filter_by(username=current_user.username).first_or_404()
-    user = {
-        'avatar': user_info.avatar(128),
-        'username': user_info.username
-    }
-    return user
-
-
-# 获取文章时间，标题和文章作者信息
-# def getuserinfo():
-#     # 关联查询Post表和User表
-#     user_info = db.session.query(Post.post_time, Post.title, Post.id, User.username).filter(Post.user_id == User.id).all()
-#     return user_info
-
-
-# 时间过滤器
-@app.template_filter('time_filter')
-def time_filter(time):
-    if isinstance(time, datetime):
-        now = datetime.now()
-        # 两个时间相减，得到描述
-        # print(time)
-        timestamp = (now - time).total_seconds()
-        if timestamp < 60:
-            return '刚刚'
-        elif timestamp < 60 * 60 and timestamp >= 60:
-            minutes = timestamp / 60
-            return "%s 分钟前" % int(minutes)
-        elif timestamp >= 60 * 60 and timestamp < 60 * 60 * 24:
-            hours = timestamp / (60 * 60)
-            return "%s 小时前" % int(hours)
-        elif timestamp >= 60 * 60 * 24 and timestamp < 60 * 60 * 24 * 30:
-            days = timestamp / (60 * 60 * 24)
-            return "%s 天前" % int(days)
-        else:
-            return time.strftime('%Y/%m/%d %H:%M')
-    else:
-        return time
-
-
-# 封装分页功能
-# 参数：1.每页显示文章数 2.要切片(分页)的数据 3.进行json处理吗,字符串yes或者no
-# 注意：to_json函数需要在表模型中设置过，方可使用
-def fenye(per_page, datas, isjson):
-    # 获取页码，若失败则取默认值1
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    total = len(datas)
-    start = (page - 1) * per_page
-    end = start + per_page
-    # 分页模板使用的Boostrap版本，页码，总文章数，每页多少篇文章
-    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page)
-    # 对数据进行切片(每per_page篇切一次)
-    data_info = datas[slice(start, end)]
-    final_data = []
-    if isjson == 'json':
-        # 将切片后的数据进行json化处理
-        for data in data_info:
-            # 使用类中的to_json函数进行处理
-            final_data.append(data.to_json())
-        return pagination, final_data
-    elif isjson == 'nojson':
-        return pagination, data_info
-    return '最后一个参数只能是json或者nojson哦'
-
-
-# 首页
-@app.route('/')
-@app.route('/index', methods=['GET'])
-def index():
-    # 获取页码，若失败则取默认值1
-    # page = request.args.get(get_page_parameter(), type=int, default=1)
-    posts = Post.query.order_by(Post.post_time.desc()).all()
-    # 分页
-    (pagination, postdata) = fenye(12, posts, 'json')
-    return render_template('front/index.html', pagination=pagination, posts=postdata)
-
-
-# 登录
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # 判断当前用户是否验证，如果通过的话返回首页
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    # 是否是post请求且数据格式正确
-    if form.validate_on_submit():
-        # 根据表格里的数据进行查询，如果查询到数据返回User对象，否则返回None
-        user = User.query.filter_by(username=form.username.data).first()
-        # print("user", user)
-        # 如果用户不存在或者密码不正确
-        if user is None or not user.check_password(form.password.data):
-            # 如果用户不存在或者密码不正确则进行提示
-            flash('用户名或密码无效,再检查一下?')
-            # 然后跳到登录页面
-            return redirect(url_for('login'))
-        # 当用户名和密码都正确时是否记住登录状态
-        login_user(user, remember=form.remember_me.data)
-        # 此时的next_page记录的是跳转至登录页面时的地址
-        next_page = request.args.get('next')
-
-        # 记录登录时间
-        current_user.last_seen = datetime.now()
-        db.session.commit()
-
-        # 如果next_page记录的地址不存在那么就返回首页
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
-        # 登录后要么重定向至跳转前的页面，要么跳转至首页
-        return redirect(next_page)
-    # 一定要有返回体，否则用户未登录时候会报错
-    return render_template('login.html', title='登录', form=form)
-
-
-# 注销登录
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-
-# 用户注册
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    # 判断当前用户是否验证，如果通过的话返回首页
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = RegistrationForm()
-    # 是否是post请求且数据是是否有效
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('恭喜您成为我们网站的新用户啦!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='注册', form=form)
-
+app.register_blueprint(home_bp)
+app.register_blueprint(LogOrReg_bp)
 
 # 用户中心
 @app.route('/user/<username>')
@@ -161,17 +27,6 @@ def user(username):
     users = getuser()
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('admin/user.html', title='个人中心', user=user, users=users)
-
-
-# # 中户中心显示最后登录时间
-# @app.before_request
-# def before_request():
-#     if current_user.is_authenticated:
-#         # 系统世界标准时间
-#         # current_user.last_seen = datetime.utcnow()
-#         # 系统本地时间
-#         current_user.last_seen = datetime.now()
-#         db.session.commit()
 
 
 # 编辑个人资料
