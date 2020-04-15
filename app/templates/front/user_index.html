@@ -7,7 +7,7 @@
         <div class="article-wrap">
             <header class="entry-header">
                 <h1>
-                    <a href="{{ url_for('post_info',post_id=post.id) }}" class="post-title" title="{{post.title}}">{{post.title}}</a>
+                    <a href="{{ url_for('post.post_info',post_id=post.id) }}" class="post-title" title="{{post.title}}">{{post.title}}</a>
                     <span class="meta-time">{{post.post_time}}</span>
                 </h1>
             </header>

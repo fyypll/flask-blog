@@ -30,15 +30,15 @@
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.username }}</td>
             <td style="display:table-cell; vertical-align:middle!important;">
-                <a href="{{ url_for('post_info',post_id=post.id) }}">{{ post.title }}</a>
+                <a href="{{ url_for('post.post_info',post_id=post.id) }}">{{ post.title }}</a>
             </td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ post.post_time }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td>
-                <a href="{{ url_for('edit_post',post_id=post.id) }}" data-toggle="tooltip" data-placement="top" title="" data-original-title="修改">
+                <a href="{{ url_for('post.edit_post',post_id=post.id) }}" data-toggle="tooltip" data-placement="top" title="" data-original-title="修改">
                     <i class="mdi mdi-24px mdi-pencil-circle"></i>
                 </a>
-                <a class="post-del" href="{{ url_for('dele_post',post_id=post.id) }}" data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">
+                <a class="post-del" href="{{ url_for('post.dele_post',post_id=post.id) }}" data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">
                     <i class="mdi mdi-24px mdi-delete-circle"></i>
                 </a>
             </td>

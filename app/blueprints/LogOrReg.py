@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, url_for, flash, request, render_template
 from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 
-from app import db, app
+from app import db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 
@@ -12,7 +12,7 @@ LogOrReg_bp = Blueprint('LogOrReg', __name__)
 
 
 # 登录
-@app.route('/login', methods=['GET', 'POST'])
+@LogOrReg_bp.route('/login', methods=['GET', 'POST'])
 def login():
     # 判断当前用户是否验证，如果通过的话返回首页
     if current_user.is_authenticated:
@@ -28,7 +28,7 @@ def login():
             # 如果用户不存在或者密码不正确则进行提示
             flash('用户名或密码无效,再检查一下?')
             # 然后跳到登录页面
-            return redirect(url_for('login'))
+            return redirect(url_for('LogOrReg.login'))
         # 当用户名和密码都正确时是否记住登录状态
         login_user(user, remember=form.remember_me.data)
         # 此时的next_page记录的是跳转至登录页面时的地址
@@ -48,7 +48,7 @@ def login():
 
 
 # 注册
-@app.route('/register', methods=['GET', 'POST'])
+@LogOrReg_bp.route('/register', methods=['GET', 'POST'])
 def register():
     # 判断当前用户是否验证，如果通过的话返回首页
     if current_user.is_authenticated:
@@ -61,12 +61,12 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('恭喜您成为我们网站的新用户啦!')
-        return redirect(url_for('login'))
+        return redirect(url_for('LogOrReg.login'))
     return render_template('register.html', title='注册', form=form)
 
 
 # 注销登录
-@app.route('/logout')
+@LogOrReg_bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home.index'))

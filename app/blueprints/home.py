@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from app.models import Post
+from app.models import Post, User
 from app.publlic_fun.publlic_fun import fenye
 
 home_bp = Blueprint('home', __name__)
@@ -16,3 +16,14 @@ def index():
     # 分页
     (pagination, postdata) = fenye(12, posts, 'json')
     return render_template('front/index.html', pagination=pagination, posts=postdata)
+
+
+# 用户个人博客首页
+@home_bp.route('/<username>')
+def user_index(username):
+    user = User.query.filter(User.username == username).first_or_404()
+    userId = user.id
+    posts = Post.query.filter(Post.user_id == userId).order_by(Post.post_time.desc()).all()
+    # 分页
+    (pagination, postdata) = fenye(12, posts, 'json')
+    return render_template('front/user_index.html', pagination=pagination, postdata=postdata)

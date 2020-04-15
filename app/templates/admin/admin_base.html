@@ -32,15 +32,12 @@
                         </li>
 
                         <li class="nav-item active">
-                            <!-- 这里传入的user_index是一个函数 -->
-                            <!-- 因此得到的地址是http://192.168.0.109:5000/user/fyypll这种样的 -->
-                            <!-- 否则会变成http://192.168.0.109:5000/user?username=fyypll -->
-                            <a href="{{ url_for('user_index', username=current_user.username) }}">
+                            <a href="{{ url_for('home.user_index', username=current_user.username) }}">
                                 <i class="mdi mdi-home-circle"></i> 我的首页</a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ url_for('send_post') }}"><i class="mdi mdi-lead-pencil"></i> 发表文章</a>
+                            <a href="{{ url_for('post.send_post') }}"><i class="mdi mdi-lead-pencil"></i> 发表文章</a>
                         </li>
 
                         <li class="nav-item">
@@ -48,7 +45,7 @@
                         </li>
                         {% if current_user.id == 1 %}
                         <li class="nav-item">
-                            <a href="{{ url_for('user_manager') }}"><i class="mdi mdi-account-settings-variant"></i>
+                            <a href="{{ url_for('user.user_manager') }}"><i class="mdi mdi-account-settings-variant"></i>
                                 用户管理</a>
                         </li>
                         {% endif %}
@@ -57,18 +54,18 @@
                             <a href="#"><i class="mdi mdi-information"></i> 我的资料</a>
                             <ul class="nav nav-subnav">
                                 <!-- 这里传入的user是一个函数，而不是想当然的以为这是路径/user -->
-                                <li><a href="{{ url_for('user', username=current_user.username) }}">我的信息</a></li>
-                                <li><a href="{{ url_for('edit_profile') }}">修改信息</a></li>
+                                <li><a href="{{ url_for('user.user', username=current_user.username) }}">我的信息</a></li>
+                                <li><a href="{{ url_for('user.edit_profile') }}">修改信息</a></li>
                             </ul>
                         </li>
 
                         <li class="nav-item nav-item-has-subnav">
                             <a href="#"><i class="mdi mdi-message-settings-variant"></i> 评论管理</a>
                             <ul class="nav nav-subnav">
-                                <li><a href="{{ url_for('comm_manager') }}">与我相关</a></li>
+                                <li><a href="{{ url_for('comments.comm_manager') }}">与我相关</a></li>
                                 {% if current_user.id == 1 %}
-                                <li><a href="{{ url_for('all_comm_manager') }}">所有评论</a></li>
-                                <li><a href="{{ url_for('liuyan_manager') }}">留言板</a></li>
+                                <li><a href="{{ url_for('comments.all_comm_manager') }}">所有评论</a></li>
+                                <li><a href="{{ url_for('liuyanban.liuyan_manager') }}">留言板</a></li>
                                 {% endif %}
                             </ul>
                         </li>
@@ -76,9 +73,9 @@
                         <li class="nav-item nav-item-has-subnav">
                             <a href="#"><i class="mdi mdi-book-open-page-variant"></i> 文章管理</a>
                             <ul class="nav nav-subnav">
-                                <li><a href="{{ url_for('post_manager') }}">我的文章</a></li>
+                                <li><a href="{{ url_for('post.post_manager') }}">我的文章</a></li>
                                 {% if current_user.id == 1 %}
-                                <li><a href="{{ url_for('all_post_manager') }}">用户文章</a></li>
+                                <li><a href="{{ url_for('post.all_post_manager') }}">用户文章</a></li>
                                 {% endif %}
                             </ul>
                         </li>
@@ -119,16 +116,16 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
-                                    <a href="{{ url_for('user', username=current_user.username) }}"><i
+                                    <a href="{{ url_for('user.user', username=current_user.username) }}"><i
                                             class="mdi mdi-account"></i> 个人信息</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('edit_profile') }}"><i class="mdi mdi-lock-outline"></i>
+                                    <a href="{{ url_for('user.edit_profile') }}"><i class="mdi mdi-lock-outline"></i>
                                         修改信息</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="{{ url_for('logout') }}"><i class="mdi mdi-logout-variant"></i> 退出登录</a>
+                                    <a href="{{ url_for('LogOrReg.logout') }}"><i class="mdi mdi-logout-variant"></i> 退出登录</a>
                                 </li>
                             </ul>
                         </li>

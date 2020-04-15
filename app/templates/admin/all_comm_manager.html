@@ -31,7 +31,7 @@
         {% for comm in comm_info %}
         <tr>
             <td style="display:table-cell; vertical-align:middle!important;">
-                <a href="{{ url_for('post_info',post_id=comm.postId) }}">{{ comm.title }}</a>
+                <a href="{{ url_for('post.post_info',post_id=comm.postId) }}">{{ comm.title }}</a>
             </td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ comm.body }}</td>
             <td style="display:table-cell; vertical-align:middle!important;">{{ comm.username }}</td>
@@ -39,11 +39,11 @@
             <td style="display:table-cell; vertical-align:middle!important;">{{ comm.send_time }}</td>
             <!-- 将文章id通过get方式传过去 -->
             <td>
-                <a href="{{ url_for('edit_comm',comm_id=comm.id) }}" data-toggle="tooltip" data-placement="top" title=""
+                <a href="{{ url_for('comments.edit_comm',comm_id=comm.id) }}" data-toggle="tooltip" data-placement="top" title=""
                    data-original-title="修改">
                     <i class="mdi mdi-24px mdi-pencil-circle"></i>
                 </a>
-                <a class="post-del" href="{{ url_for('comm_del',comm_id=comm.id) }}" data-toggle="tooltip"
+                <a class="post-del" href="{{ url_for('comments.comm_del',comm_id=comm.id) }}" data-toggle="tooltip"
                    data-placement="top" title=""
                    data-original-title="删除">
                     <i class="mdi mdi-24px mdi-delete-circle"></i>

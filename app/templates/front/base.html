@@ -24,15 +24,14 @@
             <li class="nav_active"><a href="{{ url_for('home.index') }}">主页</a></li>
             <li><a href="#">日志</a></li>
             <li><a href="#">相册</a></li>
-            <li><a href="{{ url_for('liuyan') }}">留言板</a></li>
+            <li><a href="{{ url_for('liuyanban.liuyan') }}">留言板</a></li>
             <li><a href="#">说说</a></li>
             <li><a href="#">个人档</a></li>
             <li><a href="#">音乐</a></li>
             {% if current_user.is_anonymous %}
-            <li><a href="{{ url_for('login') }}">登录</a></li>
+            <li><a href="{{ url_for('LogOrReg.login') }}">登录</a></li>
             {% else %}
-            <!--<li><a href="{{ url_for('user', username=current_user.username) }}">{{current_user.username}}</a>-->
-            <li><a href="{{ url_for('user', username=current_user.username) }}">后台</a>
+            <li><a href="{{ url_for('user.user', username=current_user.username) }}">后台</a>
             </li>
             {% endif %}
         </ul>
