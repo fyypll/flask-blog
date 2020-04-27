@@ -1,7 +1,3 @@
-/*
- *Article Responsive by www.lmlblog.com
- */
-
 var _initial,
     _margin,
     _padding;
