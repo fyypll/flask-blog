@@ -1,7 +1,19 @@
 {% extends "LoginOrRegister.html" %}
 
 {% block content %}
-
+<!--显示闪现的消息-->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ur>
+    {% for message in messages %}
+    <div class="alert alert-success" style="text-align: center">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ur>
+{% endif %}
+{% endwith %}
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <form class="form-horizontal" action="" method="post">
@@ -10,7 +22,7 @@
             <div class="form-group">
                 <!--                <label>{{ form.username.label }}</label>-->
                 {{ form.username(size=32,class="form-control",placeholder="用户名") }}
-                <i class="fa fa-user"></i>
+                <i class="mdi mdi-24px mdi-account"></i>
                 {% for error in form.username.errors %}
                 <span class="text-danger">{{ error }}</span>
                 {% endfor %}
@@ -18,7 +30,7 @@
             <div class="form-group">
                 <!--                <label>{{ form.email.label }}</label>-->
                 {{ form.email(size=64,class="form-control",placeholder="电子邮件") }}
-                <i class="fa fa-envelope"></i>
+                <i class="mdi mdi-24px mdi-email"></i>
                 {% for error in form.email.errors %}
                 <span class="text-danger">{{ error }}</span>
                 {% endfor %}
@@ -26,7 +38,7 @@
             <div class="form-group">
                 <!--                <label>{{ form.password.label }}</label>-->
                 {{ form.password(size=32,class="form-control",placeholder="密 码") }}
-                <i class="fa fa-lock"></i>
+                <i class="mdi mdi-24px mdi-key"></i>
                 {% for error in form.password.errors %}
                 <span class="text-danger">{{ error }}</span>
                 {% endfor %}
@@ -34,8 +46,17 @@
             <div class="form-group">
                 <!--                <label>{{ form.password2.label }}</label>-->
                 {{ form.password2(size=32,class="form-control",placeholder="重复密码") }}
-                <i class="fa fa-lock"></i>
+                <i class="mdi mdi-24px mdi-key"></i>
                 {% for error in form.password2.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.verify_code(size=4, class="form-control",id="verifyCode",placeholder="验证码") }}
+                <i class="mdi mdi-24px mdi-qrcode"></i>
+                <!-- 显示验证码图片，且点击刷新 -->
+                <img class="verify_code" src="/code " onclick="this.src='/code?'+ Math.random()">
+                {% for error in form.verify_code.errors %}
                 <span class="text-danger">{{ error }}</span>
                 {% endfor %}
             </div>

@@ -29,6 +29,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('邮箱', validators=[DataRequired(), Email('邮箱格式不对哦，检查一下吧!')])
     password = PasswordField('密码', validators=[DataRequired()])
     password2 = PasswordField('重复密码', validators=[DataRequired(), EqualTo('password', '两次输入的密码不一致!')])
+    verify_code = StringField('验证码', validators=[DataRequired(message='请输入验证码')])
     submit = SubmitField('注册')
 
     # 校验用户名
