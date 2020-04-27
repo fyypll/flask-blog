@@ -4,6 +4,9 @@ from flask_login import current_user
 from flask_paginate import get_page_parameter, Pagination
 from app import app
 from app.models import User
+import random
+import string
+from PIL import Image, ImageFont, ImageDraw, ImageFilter
 
 
 # 封装分页功能
@@ -64,3 +67,46 @@ def getuser():
         'username': user_info.username
     }
     return user
+
+
+# 生成指定位数验证码字符(这里是4位)
+def gene_text():
+    return ''.join(random.sample(string.ascii_letters + string.digits, 4))
+
+
+# 给验证码图片设置随机颜色
+def rndColor():
+    return (random.randint(32, 127), random.randint(32, 127), random.randint(32, 127))
+
+
+# 给验证码图片添加干扰线
+def draw_lines(draw, num, width, height):
+    for num in range(num):
+        x1 = random.randint(0, width / 2)
+        y1 = random.randint(0, height / 2)
+        x2 = random.randint(0, width)
+        y2 = random.randint(height / 2, height)
+        draw.line(((x1, y1), (x2, y2)), fill='black', width=1)
+
+
+# 生成验证码图形
+def get_verify_code():
+    code = gene_text()
+    # 图片大小
+    width, height = 110, 40
+    # 新图片对象
+    im = Image.new('RGB', (width, height), 'white')
+    # 字体
+    font = ImageFont.truetype('app/static/arial.ttf', 30)
+    # draw对象
+    draw = ImageDraw.Draw(im)
+    str = ''
+    # 绘制字符串
+    for item in range(4):
+        draw.text((5 + random.randint(-3, 3) + 23 * item, 5 + random.randint(-3, 3)),
+                  text=code[item], fill=rndColor(), font=font)
+    # 划线
+    draw_lines(draw, 2, width, height)
+    # 高斯模糊
+    im = im.filter(ImageFilter.GaussianBlur(radius=1.5))
+    return im, code

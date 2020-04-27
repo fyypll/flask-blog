@@ -36,8 +36,8 @@
 }
 .form-horizontal .form-group i{
     position: absolute;
-    top: 12px;
-    left: 60px;
+    top: 0.15rem;
+    left: 5.5rem;
     font-size: 17px;
     color: #c8c8c8;
     transition : all 0.5s ease 0s;

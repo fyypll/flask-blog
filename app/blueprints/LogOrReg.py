@@ -1,12 +1,14 @@
 from datetime import datetime
 
-from flask import Blueprint, redirect, url_for, flash, request, render_template
+from flask import Blueprint, redirect, url_for, flash, request, render_template, make_response, session
 from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 
 from app import db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
+from app.publlic_fun.publlic_fun import get_verify_code
+from io import BytesIO
 
 LogOrReg_bp = Blueprint('LogOrReg', __name__)
 
@@ -20,6 +22,10 @@ def login():
     form = LoginForm()
     # 是否是post请求且数据格式正确
     if form.validate_on_submit():
+        # 检验验证码
+        if session.get('image').lower() != form.verify_code.data.lower():
+            flash('验证码错误！')
+            return redirect(url_for('LogOrReg.login'))
         # 根据表格里的数据进行查询，如果查询到数据返回User对象，否则返回None
         user = User.query.filter_by(username=form.username.data).first()
         # print("user", user)
@@ -70,3 +76,19 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('home.index'))
+
+
+# 验证码视图函数
+@LogOrReg_bp.route('/code')
+def get_code():
+    image, code = get_verify_code()
+    # 图片以二进制形式写入
+    buf = BytesIO()
+    image.save(buf, 'jpeg')
+    buf_str = buf.getvalue()
+    # 把buf_str作为response返回前端，并设置首部字段
+    response = make_response(buf_str)
+    response.headers['Content-Type'] = 'image/gif'
+    # 将验证码字符串储存在session中
+    session['image'] = code
+    return response
