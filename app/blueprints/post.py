@@ -110,8 +110,13 @@ def edit_post():
     if current_user.id == post_info.user_id or current_user.id == 1:
         # 是否是post请求且数据是是否有效
         if form.validate_on_submit():
-            # 如果传的文件不为空
             if form.post_pic.data is not None:
+                # 如果封面不是默认封面
+                if post_info.pic_url != '01.jpg':
+                    # 删除原文章封面文件
+                    os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
+                else:
+                    pass
                 # 上传的图片
                 post_pic = form.post_pic.data
                 # 验证上传文件类型
@@ -126,12 +131,15 @@ def edit_post():
                 pic_path = os.path.join(UPLOAD_PATH, rename_pic)
                 # 保存文件
                 post_pic.save(pic_path)
-                # 重命名后的文件名与路径拼接
-                pic_url = '../../static/upload/pic/' + rename_pic
             else:
                 # 没有传封面图片就用默认封面
-                pic_url = '../../static/images/picture/01.jpg'
-            post_info.pic_url = pic_url
+                rename_pic = '01.jpg'
+                # 且删除原封面(如果不是默认封面的话)，避免删掉默认封面图
+                if post_info.pic_url == '01.jpg':
+                    pass
+                else:
+                    os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
+            post_info.pic_url = rename_pic
             post_info.title = form.post_title.data
             post_info.body = form.post_body.data
             db.session.commit()
