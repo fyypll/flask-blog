@@ -3,9 +3,16 @@
 {% block content %}
 
 <h1>修改文章</h1>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
     <div class="form-group">
-        {{ form.hidden_tag() }}
+        <label>{{ form.post_pic.label }}</label>
+        <input type="file" name="post_pic">
+        {% for error in form.post_pic.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="form-group">
         <label>{{ form.post_title.label }}</label>
         {{ form.post_title(size=100, class="form-control") }}
         {% for error in form.post_title.errors %}

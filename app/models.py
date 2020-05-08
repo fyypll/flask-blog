@@ -43,6 +43,7 @@ class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140))
+    pic_url = db.Column(db.String(100))
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     post_time = db.Column(db.DateTime, default=datetime.now)

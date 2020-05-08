@@ -1,8 +1,10 @@
+import os
 from datetime import datetime
 
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy.sql import exists
+from werkzeug.utils import secure_filename
 
 from app import db
 from app.forms import PostForm, LiuYanForm
@@ -10,6 +12,9 @@ from app.models import Post, User, Comments
 from app.publlic_fun.publlic_fun import getuser, fenye
 
 post_bp = Blueprint('post', __name__)
+
+# 获取上一级目录
+UPLOAD_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir, 'static/upload/pic')
 
 
 # 发表文章
@@ -20,12 +25,34 @@ def send_post():
     users = getuser()
     # 如果是post请求且数据格式正确
     if form.validate_on_submit():
+        # 如果传的文件不为空
+        if form.post_pic.data is not None:
+            # 上传的图片
+            post_pic = form.post_pic.data
+            # 验证上传文件类型
+            filename = secure_filename(post_pic.filename)
+            # 获取图片上传时间
+            ftime = datetime.now().strftime('%Y%m%d%H%M%S%f')
+            # 获取图片后缀
+            pic_suffix = os.path.splitext(filename)[1]
+            # 文件重命名
+            rename_pic = ftime + pic_suffix
+            # 拼接文件路径（包括文件名）
+            pic_path = os.path.join(UPLOAD_PATH, rename_pic)
+            # 保存文件
+            post_pic.save(pic_path)
+            # 重命名后的文件名与路径拼接
+            pic_url = '../../static/upload/pic/' + rename_pic
+        else:
+            # 没有传封面图片就用默认封面
+            pic_url = '../../static/images/picture/01.jpg'
         # 获取当前已登录用户id
         userId = current_user.id
         # 获取提交文章时间
         sendTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 将数据放到post
-        post = Post(title=form.post_title.data, body=form.post_body.data, user_id=userId, post_time=sendTime)
+        post = Post(title=form.post_title.data, body=form.post_body.data, user_id=userId, post_time=sendTime,
+                    pic_url=pic_url)
         # 将post提交到数据库
         db.session.add(post)
         db.session.commit()
@@ -83,6 +110,28 @@ def edit_post():
     if current_user.id == post_info.user_id or current_user.id == 1:
         # 是否是post请求且数据是是否有效
         if form.validate_on_submit():
+            # 如果传的文件不为空
+            if form.post_pic.data is not None:
+                # 上传的图片
+                post_pic = form.post_pic.data
+                # 验证上传文件类型
+                filename = secure_filename(post_pic.filename)
+                # 获取图片上传时间
+                ftime = datetime.now().strftime('%Y%m%d%H%M%S%f')
+                # 获取图片后缀
+                pic_suffix = os.path.splitext(filename)[1]
+                # 文件重命名
+                rename_pic = ftime + pic_suffix
+                # 拼接文件路径（包括文件名）
+                pic_path = os.path.join(UPLOAD_PATH, rename_pic)
+                # 保存文件
+                post_pic.save(pic_path)
+                # 重命名后的文件名与路径拼接
+                pic_url = '../../static/upload/pic/' + rename_pic
+            else:
+                # 没有传封面图片就用默认封面
+                pic_url = '../../static/images/picture/01.jpg'
+            post_info.pic_url = pic_url
             post_info.title = form.post_title.data
             post_info.body = form.post_body.data
             db.session.commit()

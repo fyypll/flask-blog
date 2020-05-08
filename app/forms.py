@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from app.models import User
+from flask_wtf.file import FileRequired, FileAllowed, FileField
 
 
 # 登录表格
@@ -91,6 +92,8 @@ class EditProfileForm(FlaskForm):
 
 # 发表/编辑文章的表格
 class PostForm(FlaskForm):
+    # post_pic = FileField('封面', validators=[FileRequired('请选择文件'), FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '图片格式必须为jpg、jpeg、png或者gif')])
+    post_pic = FileField('封面', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '图片格式必须为jpg、jpeg、png或者gif')])
     post_title = StringField('标题', validators=[DataRequired()])
     post_body = TextAreaField('正文', validators=[Length(min=10, max=10000)])
     submit = SubmitField('发表')
