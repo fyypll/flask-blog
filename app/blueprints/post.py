@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+from PIL import Image
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy.sql import exists
@@ -41,6 +42,12 @@ def send_post():
             pic_path = os.path.join(UPLOAD_PATH, rename_pic)
             # 保存文件
             post_pic.save(pic_path)
+
+            # 压缩图片
+            im = Image.open(pic_path)
+            im.thumbnail((256, 192))
+            # print(im.format, im.size, im.mode)
+            im.save(pic_path, 'JPEG')
         else:
             # 没有传封面图片就用默认封面
             rename_pic = '01.jpg'
@@ -129,6 +136,12 @@ def edit_post():
                 pic_path = os.path.join(UPLOAD_PATH, rename_pic)
                 # 保存文件
                 post_pic.save(pic_path)
+
+                # 压缩图片
+                im = Image.open(pic_path)
+                im.thumbnail((256, 192))
+                # print(im.format, im.size, im.mode)
+                im.save(pic_path, 'JPEG')
             else:
                 # 没有传封面图片就用默认封面
                 rename_pic = '01.jpg'
