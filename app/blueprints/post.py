@@ -118,8 +118,10 @@ def edit_post():
             if form.post_pic.data is not None:
                 # 如果封面不是默认封面
                 if post_info.pic_url != '01.jpg':
-                    # 删除原文章封面文件
-                    os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
+                    # 如果原封面文件存在，那么删除
+                    if os.path.exists(post_info.pic_url):
+                        # 删除原文章封面文件
+                        os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
                 else:
                     pass
                 # 上传的图片
@@ -141,7 +143,7 @@ def edit_post():
                 im = Image.open(pic_path)
                 im.thumbnail((256, 192))
                 # print(im.format, im.size, im.mode)
-                im.save(pic_path, 'JPEG')
+                im.save(pic_path)
             else:
                 # 没有传封面图片就用默认封面
                 rename_pic = '01.jpg'
@@ -149,7 +151,9 @@ def edit_post():
                 if post_info.pic_url == '01.jpg':
                     pass
                 else:
-                    os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
+                    # 如果原封面文件存在，那么删除
+                    if os.path.exists(post_info.pic_url):
+                        os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
             post_info.pic_url = rename_pic
             post_info.title = form.post_title.data
             post_info.body = form.post_body.data
