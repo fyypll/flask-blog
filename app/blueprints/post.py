@@ -47,7 +47,7 @@ def send_post():
             im = Image.open(pic_path)
             im.thumbnail((256, 192))
             # print(im.format, im.size, im.mode)
-            im.save(pic_path, 'JPEG')
+            im.save(pic_path)
         else:
             # 没有传封面图片就用默认封面
             rename_pic = '01.jpg'
