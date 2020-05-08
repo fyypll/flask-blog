@@ -41,18 +41,16 @@ def send_post():
             pic_path = os.path.join(UPLOAD_PATH, rename_pic)
             # 保存文件
             post_pic.save(pic_path)
-            # 重命名后的文件名与路径拼接
-            pic_url = '../../static/upload/pic/' + rename_pic
         else:
             # 没有传封面图片就用默认封面
-            pic_url = '../../static/images/picture/01.jpg'
+            rename_pic = '01.jpg'
         # 获取当前已登录用户id
         userId = current_user.id
         # 获取提交文章时间
         sendTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 将数据放到post
         post = Post(title=form.post_title.data, body=form.post_body.data, user_id=userId, post_time=sendTime,
-                    pic_url=pic_url)
+                    pic_url=rename_pic)
         # 将post提交到数据库
         db.session.add(post)
         db.session.commit()
