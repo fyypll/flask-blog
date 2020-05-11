@@ -20,8 +20,8 @@ migrate = Migrate(app, db)
 # 初始化登录模块
 login = LoginManager(app)
 # 加在login = LoginManager(app)后面，位置不能错
-# 不让未登录的用户进入除了login之外的界面
-login.login_view = 'login'
+# 用户未登录则跳到该路由
+login.login_view = 'LogOrReg.login'
 login.login_message = u"这个页面需要你登录才能访问哦"
 
 # 这里放后面，位置也不能错
