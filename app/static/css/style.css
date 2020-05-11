@@ -913,7 +913,7 @@ ul.mobile .commlist-middle {
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
-    text-indent: 2em;
+    /*text-indent: 2em;*/
     text-align: justify;
 }
 
