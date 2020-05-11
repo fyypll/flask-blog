@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-
+from sqlalchemy import and_
 from PIL import Image
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required, current_user
@@ -216,8 +216,8 @@ def post_info():
         elif len(form.body.data) > 1000:
             flash('评论字数最多1000字哦!')
             return redirect(url_for('post.post_info', post_id=post_id))
-        # 如果发的评论在数据库表中已经存在
-        if db.session.query(exists().where(Comments.body == body)).scalar():
+        # 如果发的评论在数据库表中已经存在(评论信息和用户名都同时存在)
+        if db.session.query(exists().where(Comments.body == body)).scalar() and db.session.query(exists().where(Comments.username == username)).scalar():
             flash('不可发布重复评论')
             return redirect(url_for('post.post_info', post_id=post_id))
         else:
