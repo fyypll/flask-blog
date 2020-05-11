@@ -111,19 +111,17 @@ def edit_post():
     post_id = request.args.get('post_id')
     # 根据文章id查询文章数据
     post_info = Post.query.filter_by(id=post_id).first_or_404()
+    # 封面路径
+    pic_path = os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url)
     # 如果当前登录用户id是文章作者id，或者是管理员，则允许对文章进行修改
     if current_user.id == post_info.user_id or current_user.id == 1:
         # 是否是post请求且数据是是否有效
         if form.validate_on_submit():
             if form.post_pic.data is not None:
-                # 如果封面不是默认封面
-                if post_info.pic_url != '01.jpg':
-                    # 如果原封面文件存在，那么删除
-                    if os.path.exists(post_info.pic_url):
-                        # 删除原文章封面文件
-                        os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
-                else:
-                    pass
+                # 如果封面不是默认封面且原封面文件存在，那么删除
+                if post_info.pic_url != '01.jpg' and os.path.exists(pic_path):
+                    # 删除原文章封面文件
+                    os.remove(pic_path)
                 # 上传的图片
                 post_pic = form.post_pic.data
                 # 验证上传文件类型
@@ -135,25 +133,21 @@ def edit_post():
                 # 文件重命名
                 rename_pic = ftime + pic_suffix
                 # 拼接文件路径（包括文件名）
-                pic_path = os.path.join(UPLOAD_PATH, rename_pic)
+                pic_path_two = os.path.join(UPLOAD_PATH, rename_pic)
                 # 保存文件
-                post_pic.save(pic_path)
+                post_pic.save(pic_path_two)
 
                 # 压缩图片
-                im = Image.open(pic_path)
+                im = Image.open(pic_path_two)
                 im.thumbnail((256, 192))
                 # print(im.format, im.size, im.mode)
-                im.save(pic_path)
+                im.save(pic_path_two)
             else:
                 # 没有传封面图片就用默认封面
                 rename_pic = '01.jpg'
-                # 且删除原封面(如果不是默认封面的话)，避免删掉默认封面图
-                if post_info.pic_url == '01.jpg':
-                    pass
-                else:
-                    # 如果原封面文件存在，那么删除
-                    if os.path.exists(post_info.pic_url):
-                        os.remove(os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url))
+                # 如果封面不是默认封面且封面文件存在
+                if post_info.pic_url != '01.jpg' and os.path.exists(pic_path):
+                    os.remove(pic_path)
             post_info.pic_url = rename_pic
             post_info.title = form.post_title.data
             post_info.body = form.post_body.data
@@ -178,6 +172,12 @@ def edit_post():
 def dele_post(post_id):
     # 根据文章id查询到文章数据
     post_info = Post.query.filter_by(id=post_id).first_or_404()
+    # 封面路径
+    pic_path = os.path.join(os.path.dirname(__file__), '../static/upload/pic', post_info.pic_url)
+    # 如果原封面文件存在且不是默认封面，那么删除
+    if os.path.exists(pic_path) and post_info.pic_url != '01.jpg':
+        # 删除原文章封面文件
+        os.remove(pic_path)
     db.session.delete(post_info)
     db.session.commit()
     flash('文章已成功删除!')
