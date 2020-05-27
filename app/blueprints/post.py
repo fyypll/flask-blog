@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-from sqlalchemy import and_
 from PIL import Image
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from flask_login import login_required, current_user
